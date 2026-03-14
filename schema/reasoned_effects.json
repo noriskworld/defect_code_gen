@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "reasoned_effects",
+    "type": "object",
+    "properties": {
+        "reasoning_trace": {
+            "type": "string",
+            "description": "The step-by-step causal chain from component to system level."
+        },
+        "end_effect": {
+            "type": "string",
+            "description": "MUST be selected exactly from the provided master taxonomy list."
+        },
+        "severity": {
+            "type": "integer",
+            "enum": [1, 4, 7, 9, 10],
+            "description": "Severity ranking derived from the end effect. Must be one of: 1 (cosmetic), 4 (performance), 7 (reliability), 9 (compliance), 10 (safety)."
+        }
+    },
+    "required": [
+        "reasoning_trace",
+        "end_effect",
+        "severity"
+    ],
+    "additionalProperties": false
+}

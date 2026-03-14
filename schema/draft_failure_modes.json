@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "draft_failure_modes",
+    "description": "Phase 1 temporary output from the LLM containing raw generated failure modes prior to verification and enrichment.",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "category": {
+                "type": "string",
+                "enum": [
+                    "Total Loss of Function",
+                    "Partial / Degraded Function",
+                    "Intermittent Function",
+                    "Unintended / Spurious Function",
+                    "Delayed / Early Function",
+                    "Inability to Stop Function",
+                    "Erratic Function"
+                ],
+                "description": "The target failure mode category."
+            },
+            "syntactical_description": {
+                "type": "string",
+                "description": "The strict syntactically generated failure sentence (e.g., 'Fails to transfer liquid')."
+            }
+        },
+        "required": [
+            "category",
+            "syntactical_description"
+        ],
+        "additionalProperties": false
+    }
+}

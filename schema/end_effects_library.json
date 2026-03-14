@@ -1,0 +1,109 @@
+{
+  "end_effects": [
+    {
+      "effect_id": "EFF-101",
+      "description": "Catastrophic physical failure resulting in fire, explosion, or high-energy release.",
+      "severity": 10,
+      "severity_category": "Safety - Injury or Death",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-102",
+      "description": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+      "severity": 10,
+      "severity_category": "Safety - Injury or Death",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-103",
+      "description": "Unintended activation or inability to stop hazardous moving parts.",
+      "severity": 10,
+      "severity_category": "Safety - Injury or Death",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-091",
+      "description": "Violation of statutory environmental or emissions regulations.",
+      "severity": 9,
+      "severity_category": "Compliance - Loss of Certification",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-092",
+      "description": "Failure to meet mandatory electromagnetic interference (EMI) or regional electrical safety certifications.",
+      "severity": 9,
+      "severity_category": "Compliance - Loss of Certification",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-093",
+      "description": "Breach of mandatory data privacy, cybersecurity, or communication standards.",
+      "severity": 9,
+      "severity_category": "Compliance - Loss of Certification",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-071",
+      "description": "Complete inability to power on, initialize, or accept user inputs.",
+      "severity": 7,
+      "severity_category": "Reliability - Loss of Main Function",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-072",
+      "description": "Abrupt and unrecoverable cessation of the primary function during operation.",
+      "severity": 7,
+      "severity_category": "Reliability - Loss of Main Function",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-073",
+      "description": "Total inability to interface, physically or digitally, with required external systems or accessories.",
+      "severity": 7,
+      "severity_category": "Reliability - Loss of Main Function",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-041",
+      "description": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4,
+      "severity_category": "Performance - Degraded Main Function",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-042",
+      "description": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4,
+      "severity_category": "Performance - Degraded Main Function",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-043",
+      "description": "Excessive consumption of power, fuel, or consumable resources during normal operation.",
+      "severity": 4,
+      "severity_category": "Performance - Degraded Main Function",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-044",
+      "description": "Nuisance user experience due to non-hazardous heat, vibration, or elevated noise levels.",
+      "severity": 4,
+      "severity_category": "Performance - Degraded Main Function",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-011",
+      "description": "Visible cosmetic damage, wear, or material discoloration that does not affect operation.",
+      "severity": 1,
+      "severity_category": "Cosmetic - No Performance Degradation",
+      "origin": "FOUNDATIONAL"
+    },
+    {
+      "effect_id": "EFF-012",
+      "description": "Minor sensory anomalies (e.g., harmless clicking, squeaking, or slight odor) with zero functional impact.",
+      "severity": 1,
+      "severity_category": "Cosmetic - No Performance Degradation",
+      "origin": "FOUNDATIONAL"
+    }
+  ]
+}

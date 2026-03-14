@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "standardized_defect_codes",
+  "description": "A generic knowledge library containing system hierarchy, standardized functional basis (verb-noun), and algorithmically derived failure modes with severity rankings.",
+  "type": "object",
+  "required": [
+    "metadata",
+    "hierarchy",
+    "functions",
+    "failure_modes"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Information categorizing the library for downstream reuse.",
+      "properties": {
+        "product_family": {
+          "type": "string",
+          "description": "e.g., Industrial HVAC, EV Powertrain, Infotainment"
+        },
+        "domain_standards": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "e.g., ['SAE J1739', 'IEC 60812']"
+        },
+        "version": {
+          "type": "string",
+          "description": "Library version for tracking updates over time."
+        }
+      },
+      "required": [
+        "product_family"
+      ]
+    },
+    "hierarchy": {
+      "description": "The structural breakdown of the product family.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "description": "Unique identifier, e.g., COMP-001"
+          },
+          "parent_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "References another node_id. Null if Top Level System."
+          },
+          "name": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "System",
+              "Subsystem",
+              "Component"
+            ]
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "node_id",
+          "name",
+          "level"
+        ]
+      }
+    },
+    "functions": {
+      "description": "Standardized verb-noun pairs and their allocation to the hierarchy.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "function_id": {
+            "type": "string",
+            "description": "Unique identifier, e.g., FUNC-001"
+          },
+          "verb": {
+            "type": "string",
+            "description": "Strictly one action word."
+          },
+          "noun": {
+            "type": "string",
+            "description": "Strictly the target of the action."
+          },
+          "allocations": {
+            "description": "Maps the function to specific hierarchy nodes (L-Matrix data).",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "node_id": {
+                  "type": "string"
+                },
+                "support_level": {
+                  "type": "string",
+                  "enum": [
+                    "Primary",
+                    "Secondary",
+                    "Null"
+                  ]
+                }
+              },
+              "required": [
+                "node_id",
+                "support_level"
+              ]
+            }
+          }
+        },
+        "required": [
+          "function_id",
+          "verb",
+          "noun"
+        ]
+      }
+    },
+    "failure_modes": {
+      "description": "Algorithmically generated failures mapped to defect codes and severity.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "failure_id": {
+            "type": "string",
+            "description": "Unique identifier, e.g., FAIL-001"
+          },
+          "function_id": {
+            "type": "string",
+            "description": "References the function_id this failure applies to."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "Total Loss of Function",
+              "Partial / Degraded Function",
+              "Intermittent Function",
+              "Unintended / Spurious Function",
+              "Delayed / Early Function",
+              "Inability to Stop Function",
+              "Erratic Function"
+            ]
+          },
+          "syntactical_description": {
+            "type": "string",
+            "description": "The strict syntactically generated failure sentence (e.g., 'Fails to transfer liquid')."
+          },
+          "defect_code": {
+            "type": "string",
+            "description": "The standardized code for field reporting."
+          },
+          "end_effect": {
+            "type": "string",
+            "description": "Fetched from the master taxonomy, representing the system-level consequence."
+          },
+          "severity": {
+            "type": "integer",
+            "enum": [1, 4, 7, 9, 10],
+            "description": "Severity ranking (1=cosmetic, 4=performance, 7=reliability, 9=compliance, 10=safety) tied to the end_effect."
+          }
+        },
+        "required": [
+          "failure_id",
+          "function_id",
+          "category",
+          "syntactical_description",
+          "defect_code"
+        ]
+      }
+    }
+  }
+}
