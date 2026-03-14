@@ -21,6 +21,7 @@ import hashlib
 import json
 import os
 import sys
+from typing import Dict, List, Any
 
 from jsonschema import validate, ValidationError
 
@@ -59,8 +60,8 @@ def generate_defect_code(function_id: str, category: str, syntactical_descriptio
     The same inputs always produce the same code (deterministic, duplicate-free).
     """
     composite_key = f"{function_id}|{category}|{syntactical_description}"
-    hash_hex = hashlib.sha256(composite_key.encode("utf-8")).hexdigest()[:8]
-    return f"DC-{hash_hex}"
+    hash_hex = hashlib.sha256(composite_key.encode("utf-8")).hexdigest()
+    return f"DC-{hash_hex[:8]}"
 
 
 # ==========================================
@@ -107,7 +108,7 @@ def assemble(hierarchy: list, functions: list, effects_map: dict, metadata: dict
     assembled_failure_modes = []
 
     # Track sequence counters per function_id for readable IDs
-    seq_counter = {}
+    seq_counter: Dict[str, int] = {}
 
     for func in functions:
         function_id = func["function_id"]
@@ -158,8 +159,8 @@ def assemble(hierarchy: list, functions: list, effects_map: dict, metadata: dict
 # 4. SCHEMA VALIDATION
 # ==========================================
 
-DEFAULT_SCHEMA_PATH = os.path.expanduser(
-    "~/.gemini/antigravity/schemas/standardized_defect_codes_v1.json"
+DEFAULT_SCHEMA_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "schema", "standardized_defect_codes_v1.json"
 )
 
 
@@ -168,7 +169,7 @@ def validate_output(assembled_data: dict, schema_path: str) -> dict:
     Validates the assembled output against the standardized_defect_codes_v1 schema.
     Returns a report dict.
     """
-    report = {"is_valid": False, "errors": []}
+    report: Dict[str, Any] = {"is_valid": False, "errors": []}
 
     # Load schema
     try:

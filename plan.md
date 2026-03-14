@@ -68,15 +68,9 @@ Establish the single, global Python environment that all AntiGravity skills will
 uv venv ~/.gemini/antigravity/.venv
 uv pip install --python ~/.gemini/antigravity/.venv/bin/python pdfplumber pymupdf pytesseract pdf2image jsonschema pytest pandas
 
-### Step 3: Establish Data Foundations
-Create the taxonomy and schemas directories.
-```
-mkdir -p ~/.gemini/antigravity/taxonomy
-mkdir -p ~/.gemini/antigravity/schemas
-```
-
-Save the standardized_defect_codes JSON schema to the schemas folder.
-Save the foundational end_effects.json to the taxonomy folder.
+### Step 3: Data Foundation
+Place the master taxonomy in `schema/end_effects_library.json`.
+Place the output schema in `schema/standardized_defect_codes_v1.json`.
 
 ### Step 4: Build the Deterministic Python Scripts (Tools)
 

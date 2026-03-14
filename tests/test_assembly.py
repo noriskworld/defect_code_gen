@@ -198,8 +198,8 @@ class TestAssembly:
                                        sample_effects_map, sample_metadata):
         """Assembled output should pass validation against the v1 schema."""
         result = assemble(sample_hierarchy, sample_functions, sample_effects_map, sample_metadata)
-        schema_path = os.path.expanduser(
-            "~/.gemini/antigravity/schemas/standardized_defect_codes_v1.json"
+        schema_path = os.path.join(
+            os.path.dirname(__file__), "..", "schema", "standardized_defect_codes_v1.json"
         )
         if os.path.exists(schema_path):
             report = validate_output(result, schema_path)
