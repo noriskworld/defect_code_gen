@@ -30,8 +30,12 @@ state.json
 htmlcov/
 .coverage
 
-# Large input PDFs (track only the small test PDF)
+# Large input PDFs (exclude the 95MB one specifically, allow smaller ones if needed)
 inputs/LVPED216026EN.pdf
+*.pdf.heavy
+
+# Generated Outputs
+outputs/
 
 # OS
 Thumbs.db
