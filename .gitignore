@@ -25,6 +25,9 @@ state.json
 .env
 /tmp/
 
+# Generated outputs
+outputs/
+
 # Test
 .pytest_cache/
 htmlcov/
