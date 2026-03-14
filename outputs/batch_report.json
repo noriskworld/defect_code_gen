@@ -1,0 +1,18 @@
+{
+  "generated_at": "2026-03-14T05:48:41.592395+00:00",
+  "total_products": 1,
+  "output_directory": "/Users/yunweihu/Documents/code/defect_code_gen/outputs",
+  "products": [
+    {
+      "product_name": "Schneider EasyTeSys Contactors",
+      "url": "https://cdn.automationdirect.com/static/specs/schneiderelectriceasytesys.pdf",
+      "domain_standards": [
+        "IEC 60947-4-1",
+        "UL 60947-4-1"
+      ],
+      "output_dir": "outputs/schneider_easytesys_contactors",
+      "output_file": "outputs/schneider_easytesys_contactors/standardized_defect_codes.json",
+      "status": "pending"
+    }
+  ]
+}
