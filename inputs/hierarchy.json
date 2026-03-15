@@ -1,0 +1,100 @@
+[
+  {
+    "node_id": "SYS-001",
+    "parent_id": null,
+    "name": "Easy TeSys Motor Control System",
+    "level": "System",
+    "description": "Schneider Electric Easy TeSys product family for industrial motor starting, protection, and control up to 690V."
+  },
+  {
+    "node_id": "SUB-001",
+    "parent_id": "SYS-001",
+    "name": "3-Pole Contactor Assembly",
+    "level": "Subsystem",
+    "description": "DPE-series 3-pole contactors (9A–38A, AC-3) for switching and controlling 3-phase motor loads."
+  },
+  {
+    "node_id": "SUB-002",
+    "parent_id": "SYS-001",
+    "name": "Thermal Overload Relay Assembly",
+    "level": "Subsystem",
+    "description": "DPER-series Class 10 thermal overload relays (0.1A–32A) providing motor overload protection with phase-loss sensitivity."
+  },
+  {
+    "node_id": "SUB-003",
+    "parent_id": "SYS-001",
+    "name": "Manual Motor Controller",
+    "level": "Subsystem",
+    "description": "GP2E-series manual motor controllers with integrated thermal and magnetic protection, suitable for isolation per IEC 60947."
+  },
+  {
+    "node_id": "COMP-001",
+    "parent_id": "SUB-001",
+    "name": "Power Contacts (3-Pole)",
+    "level": "Component",
+    "description": "Three main power switching contacts rated 9–38A (AC-3), 690V max operational voltage, 1 million electrical durability cycles."
+  },
+  {
+    "node_id": "COMP-002",
+    "parent_id": "SUB-001",
+    "name": "Electromagnetic Coil",
+    "level": "Component",
+    "description": "AC (24–240V) or DC (24V) excitation coil that generates the magnetic force to close the power contacts. Inrush 70VA, sealed 7VA."
+  },
+  {
+    "node_id": "COMP-003",
+    "parent_id": "SUB-001",
+    "name": "Auxiliary Contact (Integrated)",
+    "level": "Component",
+    "description": "1 NO or 1 NC instantaneous auxiliary contact rated 10A, 690V, 30 million mechanical cycles. Provides status signaling."
+  },
+  {
+    "node_id": "COMP-004",
+    "parent_id": "SUB-001",
+    "name": "Auxiliary Contact Block (DPEAN11)",
+    "level": "Component",
+    "description": "Front-mount clip-on auxiliary contact block providing 1 NO + 1 NC contacts, rated 10A/690V, 30 million mechanical cycles."
+  },
+  {
+    "node_id": "COMP-005",
+    "parent_id": "SUB-002",
+    "name": "Thermal Sensing Element (Bimetallic)",
+    "level": "Component",
+    "description": "Bimetallic current-sensing element with temperature compensation (-20 to +60°C) that trips at 1.14 ± 0.06 × Ir."
+  },
+  {
+    "node_id": "COMP-006",
+    "parent_id": "SUB-002",
+    "name": "Trip Mechanism",
+    "level": "Component",
+    "description": "Mechanical trip mechanism actuated by the bimetallic element, with manual reset capability and phase-loss detection."
+  },
+  {
+    "node_id": "COMP-007",
+    "parent_id": "SUB-002",
+    "name": "Overload Relay Auxiliary Contacts",
+    "level": "Component",
+    "description": "Auxiliary contacts providing trip status signaling, IP2X protection, conforming to IEC 60947-5-1."
+  },
+  {
+    "node_id": "COMP-008",
+    "parent_id": "SUB-003",
+    "name": "Manual Switch Mechanism",
+    "level": "Component",
+    "description": "Rotary or toggle switch mechanism providing ON/OFF/TRIP positions, suitable for isolation per IEC 60947-1 §7-1-6."
+  },
+  {
+    "node_id": "COMP-009",
+    "parent_id": "SUB-003",
+    "name": "Thermal Trip Unit",
+    "level": "Component",
+    "description": "Adjustable thermal overload trip element (0.1–32A setting range), Class 10 tripping characteristic."
+  },
+  {
+    "node_id": "COMP-010",
+    "parent_id": "SUB-003",
+    "name": "Magnetic Trip Unit",
+    "level": "Component",
+    "description": "Instantaneous magnetic short-circuit trip element with fixed trip current (Id ±20%), providing short-circuit protection."
+  }
+]

@@ -1,0 +1,83 @@
+{
+  "FUNC-001": [
+    {"category": "Total Loss of Function", "syntactical_description": "Fails to conduct current through the power contacts"},
+    {"category": "Partial / Degraded Function", "syntactical_description": "Conducts current at insufficient capacity due to degraded contact surface"},
+    {"category": "Intermittent Function", "syntactical_description": "Intermittently conducts current through the power contacts"},
+    {"category": "Unintended / Spurious Function", "syntactical_description": "Uncommanded conducting of current through power contacts"},
+    {"category": "Delayed / Early Function", "syntactical_description": "Conducts current too late after coil energization command"},
+    {"category": "Inability to Stop Function", "syntactical_description": "Fails to cease conducting current when coil is de-energized"},
+    {"category": "Erratic Function", "syntactical_description": "Erratically conducts current with unstable contact resistance"}
+  ],
+  "FUNC-002": [
+    {"category": "Total Loss of Function", "syntactical_description": "Fails to generate magnetic force to close the contactor"},
+    {"category": "Partial / Degraded Function", "syntactical_description": "Generates insufficient magnetic force to fully seat the armature"},
+    {"category": "Intermittent Function", "syntactical_description": "Intermittently generates magnetic force due to coil connection fault"},
+    {"category": "Unintended / Spurious Function", "syntactical_description": "Uncommanded coil generates magnetic force without control signal"},
+    {"category": "Delayed / Early Function", "syntactical_description": "Generates magnetic force too late after voltage is applied to coil"},
+    {"category": "Inability to Stop Function", "syntactical_description": "Fails to cease generate magnetic force when supply is removed"},
+    {"category": "Erratic Function", "syntactical_description": "Erratically generates magnetic force causing armature chatter"}
+  ],
+  "FUNC-003": [
+    {"category": "Total Loss of Function", "syntactical_description": "Fails to signal contact status to the control circuit"},
+    {"category": "Partial / Degraded Function", "syntactical_description": "Signals contact status with degraded accuracy or insufficient current capacity"},
+    {"category": "Intermittent Function", "syntactical_description": "Intermittently signals contact status due to auxiliary contact bounce"},
+    {"category": "Unintended / Spurious Function", "syntactical_description": "Uncommanded signaling of contact status without main contact state change"},
+    {"category": "Delayed / Early Function", "syntactical_description": "Signals contact status too late relative to actual main contact position"},
+    {"category": "Inability to Stop Function", "syntactical_description": "Fails to cease signaling contact status when main contacts open"},
+    {"category": "Erratic Function", "syntactical_description": "Erratically signals contact status with corrupted position indication"}
+  ],
+  "FUNC-004": [
+    {"category": "Total Loss of Function", "syntactical_description": "Fails to sense overload current through the bimetallic element"},
+    {"category": "Partial / Degraded Function", "syntactical_description": "Senses overload current with insufficient sensitivity due to degraded bimetallic calibration"},
+    {"category": "Intermittent Function", "syntactical_description": "Intermittently senses overload current due to thermal drift"},
+    {"category": "Unintended / Spurious Function", "syntactical_description": "Uncommanded sense of overload current triggers nuisance trip at normal load"},
+    {"category": "Delayed / Early Function", "syntactical_description": "Senses overload current too late allowing motor thermal damage"},
+    {"category": "Inability to Stop Function", "syntactical_description": "Fails to cease sense overload current after trip and reset"},
+    {"category": "Erratic Function", "syntactical_description": "Erratically senses overload current with unstable trip threshold"}
+  ],
+  "FUNC-005": [
+    {"category": "Total Loss of Function", "syntactical_description": "Fails to disconnect motor circuit during overload condition"},
+    {"category": "Partial / Degraded Function", "syntactical_description": "Disconnects motor circuit with insufficient speed causing degraded protection"},
+    {"category": "Intermittent Function", "syntactical_description": "Intermittently disconnects motor circuit with unreliable trip actuation"},
+    {"category": "Unintended / Spurious Function", "syntactical_description": "Uncommanded disconnecting of motor circuit without overload present"},
+    {"category": "Delayed / Early Function", "syntactical_description": "Disconnects motor circuit too early before actual overload threshold is reached"},
+    {"category": "Inability to Stop Function", "syntactical_description": "Fails to cease disconnecting motor circuit preventing manual reset"},
+    {"category": "Erratic Function", "syntactical_description": "Erratically disconnects motor circuit with unpredictable trip behavior"}
+  ],
+  "FUNC-006": [
+    {"category": "Total Loss of Function", "syntactical_description": "Fails to signal trip status to the monitoring system"},
+    {"category": "Partial / Degraded Function", "syntactical_description": "Signals trip status with insufficient reliability due to degraded contact surface"},
+    {"category": "Intermittent Function", "syntactical_description": "Intermittently signals trip status with unstable auxiliary contact"},
+    {"category": "Unintended / Spurious Function", "syntactical_description": "Uncommanded signaling of trip status without actual overload trip"},
+    {"category": "Delayed / Early Function", "syntactical_description": "Signals trip status too late after mechanical trip has occurred"},
+    {"category": "Inability to Stop Function", "syntactical_description": "Fails to cease signaling trip status after relay is reset"},
+    {"category": "Erratic Function", "syntactical_description": "Erratically signals trip status with corrupted indication"}
+  ],
+  "FUNC-007": [
+    {"category": "Total Loss of Function", "syntactical_description": "Fails to switch motor circuit between ON and OFF positions"},
+    {"category": "Partial / Degraded Function", "syntactical_description": "Switches motor circuit with insufficient contact pressure causing degraded performance"},
+    {"category": "Intermittent Function", "syntactical_description": "Intermittently switches motor circuit due to worn detent mechanism"},
+    {"category": "Unintended / Spurious Function", "syntactical_description": "Uncommanded switching of motor circuit from vibration or shock"},
+    {"category": "Delayed / Early Function", "syntactical_description": "Switches motor circuit with delayed mechanical response"},
+    {"category": "Inability to Stop Function", "syntactical_description": "Fails to cease switching motor circuit when moved to OFF position"},
+    {"category": "Erratic Function", "syntactical_description": "Erratically switches motor circuit with unreliable position detent"}
+  ],
+  "FUNC-008": [
+    {"category": "Total Loss of Function", "syntactical_description": "Fails to limit overload current allowing unprotected motor operation"},
+    {"category": "Partial / Degraded Function", "syntactical_description": "Limits overload current at insufficient accuracy due to degraded thermal calibration"},
+    {"category": "Intermittent Function", "syntactical_description": "Intermittently limits overload current with inconsistent trip response"},
+    {"category": "Unintended / Spurious Function", "syntactical_description": "Uncommanded limiting of overload current causes nuisance trip at normal load"},
+    {"category": "Delayed / Early Function", "syntactical_description": "Limits overload current too late exceeding the Class 10 tripping curve"},
+    {"category": "Inability to Stop Function", "syntactical_description": "Fails to cease limiting overload current preventing motor restart after reset"},
+    {"category": "Erratic Function", "syntactical_description": "Erratically limits overload current with unstable trip threshold"}
+  ],
+  "FUNC-009": [
+    {"category": "Total Loss of Function", "syntactical_description": "Fails to interrupt short-circuit current during fault condition"},
+    {"category": "Partial / Degraded Function", "syntactical_description": "Interrupts short-circuit current with insufficient speed causing degraded protection"},
+    {"category": "Intermittent Function", "syntactical_description": "Intermittently interrupts short-circuit current with unreliable magnetic trip"},
+    {"category": "Unintended / Spurious Function", "syntactical_description": "Uncommanded interrupting of short-circuit current during normal inrush"},
+    {"category": "Delayed / Early Function", "syntactical_description": "Interrupts short-circuit current too late allowing equipment damage"},
+    {"category": "Inability to Stop Function", "syntactical_description": "Fails to cease interrupting short-circuit current preventing circuit re-energization"},
+    {"category": "Erratic Function", "syntactical_description": "Erratically interrupts short-circuit current with unpredictable trip threshold"}
+  ]
+}

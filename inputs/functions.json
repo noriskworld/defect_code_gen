@@ -1,0 +1,75 @@
+[
+  {
+    "function_id": "FUNC-001",
+    "verb": "conduct",
+    "noun": "current",
+    "allocations": [
+      {"node_id": "COMP-001", "support_level": "Primary"}
+    ]
+  },
+  {
+    "function_id": "FUNC-002",
+    "verb": "generate",
+    "noun": "magnetic force",
+    "allocations": [
+      {"node_id": "COMP-002", "support_level": "Primary"}
+    ]
+  },
+  {
+    "function_id": "FUNC-003",
+    "verb": "signal",
+    "noun": "contact status",
+    "allocations": [
+      {"node_id": "COMP-003", "support_level": "Primary"},
+      {"node_id": "COMP-004", "support_level": "Primary"}
+    ]
+  },
+  {
+    "function_id": "FUNC-004",
+    "verb": "sense",
+    "noun": "overload current",
+    "allocations": [
+      {"node_id": "COMP-005", "support_level": "Primary"}
+    ]
+  },
+  {
+    "function_id": "FUNC-005",
+    "verb": "disconnect",
+    "noun": "motor circuit",
+    "allocations": [
+      {"node_id": "COMP-006", "support_level": "Primary"}
+    ]
+  },
+  {
+    "function_id": "FUNC-006",
+    "verb": "signal",
+    "noun": "trip status",
+    "allocations": [
+      {"node_id": "COMP-007", "support_level": "Primary"}
+    ]
+  },
+  {
+    "function_id": "FUNC-007",
+    "verb": "switch",
+    "noun": "motor circuit",
+    "allocations": [
+      {"node_id": "COMP-008", "support_level": "Primary"}
+    ]
+  },
+  {
+    "function_id": "FUNC-008",
+    "verb": "limit",
+    "noun": "overload current",
+    "allocations": [
+      {"node_id": "COMP-009", "support_level": "Primary"}
+    ]
+  },
+  {
+    "function_id": "FUNC-009",
+    "verb": "interrupt",
+    "noun": "short-circuit current",
+    "allocations": [
+      {"node_id": "COMP-010", "support_level": "Primary"}
+    ]
+  }
+]

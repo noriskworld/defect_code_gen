@@ -1,0 +1,506 @@
+[
+  {
+    "function_id": "FUNC-001",
+    "category": "Total Loss of Function",
+    "syntactical_description": "Fails to conduct current through the power contacts",
+    "reasoning_trace": "If the power contacts fail to conduct, the motor cannot be energized at all. This is a complete loss of the primary function.",
+    "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-001",
+    "category": "Partial / Degraded Function",
+    "syntactical_description": "Conducts current at insufficient capacity due to degraded contact surface",
+    "reasoning_trace": "Degraded contact surfaces increase resistance, leading to voltage drop and reduced motor performance. The motor runs but at reduced capacity.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-001",
+    "category": "Intermittent Function",
+    "syntactical_description": "Intermittently conducts current through the power contacts",
+    "reasoning_trace": "Intermittent conduction causes the motor to cycle on/off unexpectedly. This is an abrupt cessation of the primary function during operation.",
+    "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-001",
+    "category": "Unintended / Spurious Function",
+    "syntactical_description": "Uncommanded conducting of current through power contacts",
+    "reasoning_trace": "Welded or stuck contacts energize the motor without a command. This is unintended activation of moving parts, a safety hazard.",
+    "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-001",
+    "category": "Delayed / Early Function",
+    "syntactical_description": "Conducts current too late after coil energization command",
+    "reasoning_trace": "Delayed contact engagement means the motor starts late. Functionally degraded but not a total loss.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-001",
+    "category": "Inability to Stop Function",
+    "syntactical_description": "Fails to cease conducting current when coil is de-energized",
+    "reasoning_trace": "If contacts don't open, the motor cannot be stopped. This is a direct safety hazard — inability to stop moving parts.",
+    "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-001",
+    "category": "Erratic Function",
+    "syntactical_description": "Erratically conducts current with unstable contact resistance",
+    "reasoning_trace": "Erratic conduction causes voltage fluctuations and unstable motor output. Quality of operation is degraded.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-002",
+    "category": "Total Loss of Function",
+    "syntactical_description": "Fails to generate magnetic force to close the contactor",
+    "reasoning_trace": "Without magnetic force, the contactor cannot close. The motor cannot be started. Total loss.",
+    "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-002",
+    "category": "Partial / Degraded Function",
+    "syntactical_description": "Generates insufficient magnetic force to fully seat the armature",
+    "reasoning_trace": "Insufficient force means contacts may not fully close, causing high resistance and degraded performance.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-002",
+    "category": "Intermittent Function",
+    "syntactical_description": "Intermittently generates magnetic force due to coil connection fault",
+    "reasoning_trace": "Intermittent coil activation means the motor cuts in and out. Abrupt cessation of primary function.",
+    "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-002",
+    "category": "Unintended / Spurious Function",
+    "syntactical_description": "Uncommanded coil generates magnetic force without control signal",
+    "reasoning_trace": "Spurious coil energization closes the contactor and starts the motor without command. Unintended moving parts.",
+    "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-002",
+    "category": "Delayed / Early Function",
+    "syntactical_description": "Generates magnetic force too late after voltage is applied to coil",
+    "reasoning_trace": "Delayed response means slower motor start. A degraded but functional condition.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-002",
+    "category": "Inability to Stop Function",
+    "syntactical_description": "Fails to cease generate magnetic force when supply is removed",
+    "reasoning_trace": "If the coil remains energized, the contactor stays closed and the motor cannot be stopped. Safety hazard.",
+    "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-002",
+    "category": "Erratic Function",
+    "syntactical_description": "Erratically generates magnetic force causing armature chatter",
+    "reasoning_trace": "Chattering armature creates noise and vibration, and degrades contact life. Nuisance condition.",
+    "end_effect": "Nuisance user experience due to non-hazardous heat, vibration, or elevated noise levels.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-003",
+    "category": "Total Loss of Function",
+    "syntactical_description": "Fails to signal contact status to the control circuit",
+    "reasoning_trace": "No status signal means the control system cannot confirm contactor state. Loss of interface capability.",
+    "end_effect": "Total inability to interface, physically or digitally, with required external systems or accessories.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-003",
+    "category": "Partial / Degraded Function",
+    "syntactical_description": "Signals contact status with degraded accuracy or insufficient current capacity",
+    "reasoning_trace": "Signal is present but unreliable. Erratic/poor quality output from this auxiliary function.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-003",
+    "category": "Intermittent Function",
+    "syntactical_description": "Intermittently signals contact status due to auxiliary contact bounce",
+    "reasoning_trace": "Intermittent signaling means the PLC or control system receives unreliable status. Erratic output.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-003",
+    "category": "Unintended / Spurious Function",
+    "syntactical_description": "Uncommanded signaling of contact status without main contact state change",
+    "reasoning_trace": "False status signals can trigger incorrect control logic. Erratic system output.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-003",
+    "category": "Delayed / Early Function",
+    "syntactical_description": "Signals contact status too late relative to actual main contact position",
+    "reasoning_trace": "Delayed signal causes timing mismatch in control sequences. Degraded performance.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-003",
+    "category": "Inability to Stop Function",
+    "syntactical_description": "Fails to cease signaling contact status when main contacts open",
+    "reasoning_trace": "Stuck auxiliary contact signal misleads the control system about contactor state. Erratic output.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-003",
+    "category": "Erratic Function",
+    "syntactical_description": "Erratically signals contact status with corrupted position indication",
+    "reasoning_trace": "Corrupted status signals make contactor state unpredictable to the control system.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-004",
+    "category": "Total Loss of Function",
+    "syntactical_description": "Fails to sense overload current through the bimetallic element",
+    "reasoning_trace": "If the bimetallic element fails to sense overload, the motor has no thermal protection. Potential for motor winding overheating leading to fire or hazardous temperature exposure.",
+    "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-004",
+    "category": "Partial / Degraded Function",
+    "syntactical_description": "Senses overload current with insufficient sensitivity due to degraded bimetallic calibration",
+    "reasoning_trace": "Reduced sensitivity means the relay tolerates higher overload before tripping. Motor runs in degraded protection mode.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-004",
+    "category": "Intermittent Function",
+    "syntactical_description": "Intermittently senses overload current due to thermal drift",
+    "reasoning_trace": "Intermittent sensing provides unreliable protection. Motor protection is erratic and unstable.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-004",
+    "category": "Unintended / Spurious Function",
+    "syntactical_description": "Uncommanded sense of overload current triggers nuisance trip at normal load",
+    "reasoning_trace": "Nuisance trips shut down the motor unexpectedly. This is an abrupt cessation of primary function.",
+    "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-004",
+    "category": "Delayed / Early Function",
+    "syntactical_description": "Senses overload current too late allowing motor thermal damage",
+    "reasoning_trace": "Delayed sensing allows the motor to overheat during prolonged overload. Potential thermal hazard.",
+    "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-004",
+    "category": "Inability to Stop Function",
+    "syntactical_description": "Fails to cease sense overload current after trip and reset",
+    "reasoning_trace": "If sensing doesn't reset, the relay prevents motor restart. An inability to power on.",
+    "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-004",
+    "category": "Erratic Function",
+    "syntactical_description": "Erratically senses overload current with unstable trip threshold",
+    "reasoning_trace": "Unpredictable trip thresholds make motor protection unreliable. Erratic output quality.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-005",
+    "category": "Total Loss of Function",
+    "syntactical_description": "Fails to disconnect motor circuit during overload condition",
+    "reasoning_trace": "If the trip mechanism fails, the motor is unprotected during overload. Motor windings can overheat catastrophically.",
+    "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-005",
+    "category": "Partial / Degraded Function",
+    "syntactical_description": "Disconnects motor circuit with insufficient speed causing degraded protection",
+    "reasoning_trace": "Slow disconnection allows excess energy to pass through. Motor operates but with degraded protection.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-005",
+    "category": "Intermittent Function",
+    "syntactical_description": "Intermittently disconnects motor circuit with unreliable trip actuation",
+    "reasoning_trace": "Unreliable disconnection means protection is sometimes present and sometimes not. Erratic quality.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-005",
+    "category": "Unintended / Spurious Function",
+    "syntactical_description": "Uncommanded disconnecting of motor circuit without overload present",
+    "reasoning_trace": "Nuisance trips shut down the motor abruptly during normal operation.",
+    "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-005",
+    "category": "Delayed / Early Function",
+    "syntactical_description": "Disconnects motor circuit too early before actual overload threshold is reached",
+    "reasoning_trace": "Early disconnection limits motor capacity unnecessarily. Degraded operation.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-005",
+    "category": "Inability to Stop Function",
+    "syntactical_description": "Fails to cease disconnecting motor circuit preventing manual reset",
+    "reasoning_trace": "If the mechanism latches permanently, the motor cannot be restarted. Inability to power on.",
+    "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-005",
+    "category": "Erratic Function",
+    "syntactical_description": "Erratically disconnects motor circuit with unpredictable trip behavior",
+    "reasoning_trace": "Unpredictable disconnection creates erratic motor operation pattern.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-006",
+    "category": "Total Loss of Function",
+    "syntactical_description": "Fails to signal trip status to the monitoring system",
+    "reasoning_trace": "No trip signal means the control system cannot detect relay trip state. Loss of interface.",
+    "end_effect": "Total inability to interface, physically or digitally, with required external systems or accessories.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-006",
+    "category": "Partial / Degraded Function",
+    "syntactical_description": "Signals trip status with insufficient reliability due to degraded contact surface",
+    "reasoning_trace": "Degraded signal quality. Erratic interface output.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-006",
+    "category": "Intermittent Function",
+    "syntactical_description": "Intermittently signals trip status with unstable auxiliary contact",
+    "reasoning_trace": "Intermittent trip signals confuse the monitoring system. Erratic output.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-006",
+    "category": "Unintended / Spurious Function",
+    "syntactical_description": "Uncommanded signaling of trip status without actual overload trip",
+    "reasoning_trace": "False trip signals cause the control system to shut down the process unnecessarily.",
+    "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-006",
+    "category": "Delayed / Early Function",
+    "syntactical_description": "Signals trip status too late after mechanical trip has occurred",
+    "reasoning_trace": "Delayed signaling means the control system reacts slowly. Degraded response.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-006",
+    "category": "Inability to Stop Function",
+    "syntactical_description": "Fails to cease signaling trip status after relay is reset",
+    "reasoning_trace": "Stuck trip signal prevents the control system from restarting the process.",
+    "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-006",
+    "category": "Erratic Function",
+    "syntactical_description": "Erratically signals trip status with corrupted indication",
+    "reasoning_trace": "Corrupted trip signals create unreliable monitoring.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-007",
+    "category": "Total Loss of Function",
+    "syntactical_description": "Fails to switch motor circuit between ON and OFF positions",
+    "reasoning_trace": "If the manual switch cannot engage, the motor circuit cannot be energized or isolated.",
+    "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-007",
+    "category": "Partial / Degraded Function",
+    "syntactical_description": "Switches motor circuit with insufficient contact pressure causing degraded performance",
+    "reasoning_trace": "Poor contact pressure increases resistance, degrading motor power delivery.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-007",
+    "category": "Intermittent Function",
+    "syntactical_description": "Intermittently switches motor circuit due to worn detent mechanism",
+    "reasoning_trace": "Intermittent switching causes the motor to cycle on and off unexpectedly.",
+    "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-007",
+    "category": "Unintended / Spurious Function",
+    "syntactical_description": "Uncommanded switching of motor circuit from vibration or shock",
+    "reasoning_trace": "Vibration-induced switching could start a motor unexpectedly. This is unintended activation of moving parts.",
+    "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-007",
+    "category": "Delayed / Early Function",
+    "syntactical_description": "Switches motor circuit with delayed mechanical response",
+    "reasoning_trace": "Delayed response means the operator cannot start/stop the motor promptly. Degraded performance.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-007",
+    "category": "Inability to Stop Function",
+    "syntactical_description": "Fails to cease switching motor circuit when moved to OFF position",
+    "reasoning_trace": "If the switch cannot stop the motor, the operator loses control of hazardous moving parts.",
+    "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-007",
+    "category": "Erratic Function",
+    "syntactical_description": "Erratically switches motor circuit with unreliable position detent",
+    "reasoning_trace": "Unreliable switching creates unpredictable motor operation.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-008",
+    "category": "Total Loss of Function",
+    "syntactical_description": "Fails to limit overload current allowing unprotected motor operation",
+    "reasoning_trace": "No overload protection exposes the motor to thermal damage and potential fire risk.",
+    "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-008",
+    "category": "Partial / Degraded Function",
+    "syntactical_description": "Limits overload current at insufficient accuracy due to degraded thermal calibration",
+    "reasoning_trace": "Inaccurate trip point means the motor is partially protected but may run through mild overloads. Degraded capacity.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-008",
+    "category": "Intermittent Function",
+    "syntactical_description": "Intermittently limits overload current with inconsistent trip response",
+    "reasoning_trace": "Inconsistent protection provides erratic overload behavior.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-008",
+    "category": "Unintended / Spurious Function",
+    "syntactical_description": "Uncommanded limiting of overload current causes nuisance trip at normal load",
+    "reasoning_trace": "Nuisance trips abruptly stop the motor during normal operation.",
+    "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-008",
+    "category": "Delayed / Early Function",
+    "syntactical_description": "Limits overload current too late exceeding the Class 10 tripping curve",
+    "reasoning_trace": "Delayed trip allows motor overheating beyond the safety curve. Thermal hazard.",
+    "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-008",
+    "category": "Inability to Stop Function",
+    "syntactical_description": "Fails to cease limiting overload current preventing motor restart after reset",
+    "reasoning_trace": "Locked-out trip mechanism prevents motor restart. Inability to power on.",
+    "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-008",
+    "category": "Erratic Function",
+    "syntactical_description": "Erratically limits overload current with unstable trip threshold",
+    "reasoning_trace": "Unstable trip thresholds create unpredictable protection behavior.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-009",
+    "category": "Total Loss of Function",
+    "syntactical_description": "Fails to interrupt short-circuit current during fault condition",
+    "reasoning_trace": "Failure to interrupt short-circuit current can lead to catastrophic arc flash, fire, or explosion.",
+    "end_effect": "Catastrophic physical failure resulting in fire, explosion, or high-energy release.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-009",
+    "category": "Partial / Degraded Function",
+    "syntactical_description": "Interrupts short-circuit current with insufficient speed causing degraded protection",
+    "reasoning_trace": "Slow interruption allows excess energy through. Motor and wiring may sustain damage but no catastrophe.",
+    "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-009",
+    "category": "Intermittent Function",
+    "syntactical_description": "Intermittently interrupts short-circuit current with unreliable magnetic trip",
+    "reasoning_trace": "Unreliable short-circuit protection makes the system unpredictably unsafe.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  },
+  {
+    "function_id": "FUNC-009",
+    "category": "Unintended / Spurious Function",
+    "syntactical_description": "Uncommanded interrupting of short-circuit current during normal inrush",
+    "reasoning_trace": "Tripping during normal motor inrush prevents the motor from starting.",
+    "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-009",
+    "category": "Delayed / Early Function",
+    "syntactical_description": "Interrupts short-circuit current too late allowing equipment damage",
+    "reasoning_trace": "Delayed short-circuit interruption can lead to arc flash and fire.",
+    "end_effect": "Catastrophic physical failure resulting in fire, explosion, or high-energy release.",
+    "severity": 10
+  },
+  {
+    "function_id": "FUNC-009",
+    "category": "Inability to Stop Function",
+    "syntactical_description": "Fails to cease interrupting short-circuit current preventing circuit re-energization",
+    "reasoning_trace": "Latched trip prevents circuit from being re-energized after fault is cleared.",
+    "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+    "severity": 7
+  },
+  {
+    "function_id": "FUNC-009",
+    "category": "Erratic Function",
+    "syntactical_description": "Erratically interrupts short-circuit current with unpredictable trip threshold",
+    "reasoning_trace": "Unpredictable trip thresholds make short-circuit protection unreliable.",
+    "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+    "severity": 4
+  }
+]
