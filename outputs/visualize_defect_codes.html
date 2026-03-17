@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defect Codes Knowledge Graph</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --primary-accent: #38bdf8;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            
+            --color-system: #fbbf24;
+            --color-subsystem: #22d3ee;
+            --color-component: #818cf8;
+            --color-function: #34d399;
+            --color-failure: #f87171;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+        }
+
+        #graph-container {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        #graph-container:active {
+            cursor: grabbing;
+        }
+
+        .node {
+            stroke: #fff;
+            stroke-width: 1.5px;
+            cursor: pointer;
+            transition: r 0.3s ease, filter 0.3s ease;
+        }
+
+        .node:hover {
+            filter: brightness(1.2) drop-shadow(0 0 8px var(--primary-accent));
+        }
+
+        .link {
+            stroke: #94a3b8;
+            stroke-opacity: 0.3;
+            stroke-width: 1px;
+            fill: none;
+            transition: stroke-opacity 0.3s ease;
+        }
+
+        .node-label {
+            font-size: 10px;
+            fill: #cbd5e1;
+            pointer-events: none;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Glassmorphism Sidebar */
+        #details-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            max-height: 80%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            z-index: 100;
+            display: none;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        #details-panel h2 {
+            margin-top: 0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary-accent);
+        }
+
+        .detail-item {
+            margin-bottom: 16px;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: var(--glass-border);
+            margin-top: 4px;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        #legend {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        #header {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            pointer-events: none;
+        }
+
+        #header h1 {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #header p {
+            margin: 4px 0 0 0;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <h1>Safety Knowledge Engine</h1>
+        <p>Standardized Defect Codes Visualizer</p>
+    </div>
+
+    <div id="legend">
+        <div class="legend-item"><div class="legend-color" style="background: var(--color-system)"></div> System</div>
+        <div class="legend-item"><div class="legend-color" style="background: var(--color-subsystem)"></div> Subsystem</div>
+        <div class="legend-item"><div class="legend-color" style="background: var(--color-component)"></div> Component</div>
+        <div class="legend-item"><div class="legend-color" style="background: var(--color-function)"></div> Function</div>
+        <div class="legend-item"><div class="legend-color" style="background: var(--color-failure)"></div> Failure Mode</div>
+    </div>
+
+    <div id="details-panel">
+        <h2 id="detail-title">Node Details</h2>
+        <div id="detail-content">
+            <p>Select a node to view details.</p>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="resetZoom()">Reset View</button>
+        <button class="btn" onclick="expandAll()">Expand All</button>
+        <button class="btn" onclick="collapseAll()">Collapse All</button>
+        <label for="json-upload" class="btn" style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+            </svg>
+            Load JSON
+        </label>
+        <input type="file" id="json-upload" accept=".json" style="display: none;" onchange="handleFileSelect(event)">
+    </div>
+
+    <svg id="graph-container"></svg>
+
+    <script>
+        // INLINED DATA TO BYPASS CORS
+        const defectData = {
+  "metadata": {
+    "product_family": "Easy TeSys Motor Control",
+    "version": "1.0"
+  },
+  "hierarchy": [
+    {
+      "node_id": "SYS-001",
+      "parent_id": null,
+      "name": "Easy TeSys Motor Control System",
+      "level": "System",
+      "description": "Schneider Electric Easy TeSys product family for industrial motor starting, protection, and control up to 690V."
+    },
+    {
+      "node_id": "SUB-001",
+      "parent_id": "SYS-001",
+      "name": "3-Pole Contactor Assembly",
+      "level": "Subsystem",
+      "description": "DPE-series 3-pole contactors (9A\u201338A, AC-3) for switching and controlling 3-phase motor loads."
+    },
+    {
+      "node_id": "SUB-002",
+      "parent_id": "SYS-001",
+      "name": "Thermal Overload Relay Assembly",
+      "level": "Subsystem",
+      "description": "DPER-series Class 10 thermal overload relays (0.1A\u201332A) providing motor overload protection with phase-loss sensitivity."
+    },
+    {
+      "node_id": "SUB-003",
+      "parent_id": "SYS-001",
+      "name": "Manual Motor Controller",
+      "level": "Subsystem",
+      "description": "GP2E-series manual motor controllers with integrated thermal and magnetic protection, suitable for isolation per IEC 60947."
+    },
+    {
+      "node_id": "COMP-001",
+      "parent_id": "SUB-001",
+      "name": "Power Contacts (3-Pole)",
+      "level": "Component",
+      "description": "Three main power switching contacts rated 9\u201338A (AC-3), 690V max operational voltage, 1 million electrical durability cycles."
+    },
+    {
+      "node_id": "COMP-002",
+      "parent_id": "SUB-001",
+      "name": "Electromagnetic Coil",
+      "level": "Component",
+      "description": "AC (24\u2013240V) or DC (24V) excitation coil that generates the magnetic force to close the power contacts. Inrush 70VA, sealed 7VA."
+    },
+    {
+      "node_id": "COMP-003",
+      "parent_id": "SUB-001",
+      "name": "Auxiliary Contact (Integrated)",
+      "level": "Component",
+      "description": "1 NO or 1 NC instantaneous auxiliary contact rated 10A, 690V, 30 million mechanical cycles. Provides status signaling."
+    },
+    {
+      "node_id": "COMP-004",
+      "parent_id": "SUB-001",
+      "name": "Auxiliary Contact Block (DPEAN11)",
+      "level": "Component",
+      "description": "Front-mount clip-on auxiliary contact block providing 1 NO + 1 NC contacts, rated 10A/690V, 30 million mechanical cycles."
+    },
+    {
+      "node_id": "COMP-005",
+      "parent_id": "SUB-002",
+      "name": "Thermal Sensing Element (Bimetallic)",
+      "level": "Component",
+      "description": "Bimetallic current-sensing element with temperature compensation (-20 to +60\u00b0C) that trips at 1.14 \u00b1 0.06 \u00d7 Ir."
+    },
+    {
+      "node_id": "COMP-006",
+      "parent_id": "SUB-002",
+      "name": "Trip Mechanism",
+      "level": "Component",
+      "description": "Mechanical trip mechanism actuated by the bimetallic element, with manual reset capability and phase-loss detection."
+    },
+    {
+      "node_id": "COMP-007",
+      "parent_id": "SUB-002",
+      "name": "Overload Relay Auxiliary Contacts",
+      "level": "Component",
+      "description": "Auxiliary contacts providing trip status signaling, IP2X protection, conforming to IEC 60947-5-1."
+    },
+    {
+      "node_id": "COMP-008",
+      "parent_id": "SUB-003",
+      "name": "Manual Switch Mechanism",
+      "level": "Component",
+      "description": "Rotary or toggle switch mechanism providing ON/OFF/TRIP positions, suitable for isolation per IEC 60947-1 \u00a77-1-6."
+    },
+    {
+      "node_id": "COMP-009",
+      "parent_id": "SUB-003",
+      "name": "Thermal Trip Unit",
+      "level": "Component",
+      "description": "Adjustable thermal overload trip element (0.1\u201332A setting range), Class 10 tripping characteristic."
+    },
+    {
+      "node_id": "COMP-010",
+      "parent_id": "SUB-003",
+      "name": "Magnetic Trip Unit",
+      "level": "Component",
+      "description": "Instantaneous magnetic short-circuit trip element with fixed trip current (Id \u00b120%), providing short-circuit protection."
+    }
+  ],
+  "functions": [
+    {
+      "function_id": "FUNC-001",
+      "verb": "conduct",
+      "noun": "current",
+      "allocations": [
+        {
+          "node_id": "COMP-001",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "FUNC-002",
+      "verb": "generate",
+      "noun": "magnetic force",
+      "allocations": [
+        {
+          "node_id": "COMP-002",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "FUNC-003",
+      "verb": "signal",
+      "noun": "contact status",
+      "allocations": [
+        {
+          "node_id": "COMP-003",
+          "support_level": "Primary"
+        },
+        {
+          "node_id": "COMP-004",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "FUNC-004",
+      "verb": "sense",
+      "noun": "overload current",
+      "allocations": [
+        {
+          "node_id": "COMP-005",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "FUNC-005",
+      "verb": "disconnect",
+      "noun": "motor circuit",
+      "allocations": [
+        {
+          "node_id": "COMP-006",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "FUNC-006",
+      "verb": "signal",
+      "noun": "trip status",
+      "allocations": [
+        {
+          "node_id": "COMP-007",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "FUNC-007",
+      "verb": "switch",
+      "noun": "motor circuit",
+      "allocations": [
+        {
+          "node_id": "COMP-008",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "FUNC-008",
+      "verb": "limit",
+      "noun": "overload current",
+      "allocations": [
+        {
+          "node_id": "COMP-009",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "FUNC-009",
+      "verb": "interrupt",
+      "noun": "short-circuit current",
+      "allocations": [
+        {
+          "node_id": "COMP-010",
+          "support_level": "Primary"
+        }
+      ]
+    }
+  ],
+  "failure_modes": [
+    {
+      "failure_id": "FAIL-001-TLF-01",
+      "function_id": "FUNC-001",
+      "category": "Total Loss of Function",
+      "syntactical_description": "Fails to conduct current through the power contacts",
+      "defect_code": "DC-b5ad9c20",
+      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-001-PDF-02",
+      "function_id": "FUNC-001",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Conducts current at insufficient capacity due to degraded contact surface",
+      "defect_code": "DC-d3011a31",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-001-ITF-03",
+      "function_id": "FUNC-001",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently conducts current through the power contacts",
+      "defect_code": "DC-9e1aa9cd",
+      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-001-USF-04",
+      "function_id": "FUNC-001",
+      "category": "Unintended / Spurious Function",
+      "syntactical_description": "Uncommanded conducting of current through power contacts",
+      "defect_code": "DC-0ed44b90",
+      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-001-DEF-05",
+      "function_id": "FUNC-001",
+      "category": "Delayed / Early Function",
+      "syntactical_description": "Conducts current too late after coil energization command",
+      "defect_code": "DC-99896b7d",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-001-ISF-06",
+      "function_id": "FUNC-001",
+      "category": "Inability to Stop Function",
+      "syntactical_description": "Fails to cease conducting current when coil is de-energized",
+      "defect_code": "DC-44acbdbe",
+      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-001-ERF-07",
+      "function_id": "FUNC-001",
+      "category": "Erratic Function",
+      "syntactical_description": "Erratically conducts current with unstable contact resistance",
+      "defect_code": "DC-d474e6ce",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-002-TLF-01",
+      "function_id": "FUNC-002",
+      "category": "Total Loss of Function",
+      "syntactical_description": "Fails to generate magnetic force to close the contactor",
+      "defect_code": "DC-45f11c72",
+      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-002-PDF-02",
+      "function_id": "FUNC-002",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Generates insufficient magnetic force to fully seat the armature",
+      "defect_code": "DC-53c33d22",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-002-ITF-03",
+      "function_id": "FUNC-002",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently generates magnetic force due to coil connection fault",
+      "defect_code": "DC-dfa551f0",
+      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-002-USF-04",
+      "function_id": "FUNC-002",
+      "category": "Unintended / Spurious Function",
+      "syntactical_description": "Uncommanded coil generates magnetic force without control signal",
+      "defect_code": "DC-54c30a18",
+      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-002-DEF-05",
+      "function_id": "FUNC-002",
+      "category": "Delayed / Early Function",
+      "syntactical_description": "Generates magnetic force too late after voltage is applied to coil",
+      "defect_code": "DC-94d62940",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-002-ISF-06",
+      "function_id": "FUNC-002",
+      "category": "Inability to Stop Function",
+      "syntactical_description": "Fails to cease generate magnetic force when supply is removed",
+      "defect_code": "DC-d342024c",
+      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-002-ERF-07",
+      "function_id": "FUNC-002",
+      "category": "Erratic Function",
+      "syntactical_description": "Erratically generates magnetic force causing armature chatter",
+      "defect_code": "DC-2f13cd2f",
+      "end_effect": "Nuisance user experience due to non-hazardous heat, vibration, or elevated noise levels.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-003-TLF-01",
+      "function_id": "FUNC-003",
+      "category": "Total Loss of Function",
+      "syntactical_description": "Fails to signal contact status to the control circuit",
+      "defect_code": "DC-ac380852",
+      "end_effect": "Total inability to interface, physically or digitally, with required external systems or accessories.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-003-PDF-02",
+      "function_id": "FUNC-003",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Signals contact status with degraded accuracy or insufficient current capacity",
+      "defect_code": "DC-a8ef950b",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-003-ITF-03",
+      "function_id": "FUNC-003",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently signals contact status due to auxiliary contact bounce",
+      "defect_code": "DC-b80190bd",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-003-USF-04",
+      "function_id": "FUNC-003",
+      "category": "Unintended / Spurious Function",
+      "syntactical_description": "Uncommanded signaling of contact status without main contact state change",
+      "defect_code": "DC-8a3e8ddb",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-003-DEF-05",
+      "function_id": "FUNC-003",
+      "category": "Delayed / Early Function",
+      "syntactical_description": "Signals contact status too late relative to actual main contact position",
+      "defect_code": "DC-42ffae9e",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-003-ISF-06",
+      "function_id": "FUNC-003",
+      "category": "Inability to Stop Function",
+      "syntactical_description": "Fails to cease signaling contact status when main contacts open",
+      "defect_code": "DC-45af1617",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-003-ERF-07",
+      "function_id": "FUNC-003",
+      "category": "Erratic Function",
+      "syntactical_description": "Erratically signals contact status with corrupted position indication",
+      "defect_code": "DC-d52e2ebe",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-004-TLF-01",
+      "function_id": "FUNC-004",
+      "category": "Total Loss of Function",
+      "syntactical_description": "Fails to sense overload current through the bimetallic element",
+      "defect_code": "DC-fc4f1173",
+      "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-004-PDF-02",
+      "function_id": "FUNC-004",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Senses overload current with insufficient sensitivity due to degraded bimetallic calibration",
+      "defect_code": "DC-e789e91c",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-004-ITF-03",
+      "function_id": "FUNC-004",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently senses overload current due to thermal drift",
+      "defect_code": "DC-7e2d2b93",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-004-USF-04",
+      "function_id": "FUNC-004",
+      "category": "Unintended / Spurious Function",
+      "syntactical_description": "Uncommanded sense of overload current triggers nuisance trip at normal load",
+      "defect_code": "DC-d149e0b6",
+      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-004-DEF-05",
+      "function_id": "FUNC-004",
+      "category": "Delayed / Early Function",
+      "syntactical_description": "Senses overload current too late allowing motor thermal damage",
+      "defect_code": "DC-3804320b",
+      "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-004-ISF-06",
+      "function_id": "FUNC-004",
+      "category": "Inability to Stop Function",
+      "syntactical_description": "Fails to cease sense overload current after trip and reset",
+      "defect_code": "DC-2b226dd3",
+      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-004-ERF-07",
+      "function_id": "FUNC-004",
+      "category": "Erratic Function",
+      "syntactical_description": "Erratically senses overload current with unstable trip threshold",
+      "defect_code": "DC-7b0268c0",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-005-TLF-01",
+      "function_id": "FUNC-005",
+      "category": "Total Loss of Function",
+      "syntactical_description": "Fails to disconnect motor circuit during overload condition",
+      "defect_code": "DC-6250b646",
+      "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-005-PDF-02",
+      "function_id": "FUNC-005",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Disconnects motor circuit with insufficient speed causing degraded protection",
+      "defect_code": "DC-d0039612",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-005-ITF-03",
+      "function_id": "FUNC-005",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently disconnects motor circuit with unreliable trip actuation",
+      "defect_code": "DC-4b1c72fb",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-005-USF-04",
+      "function_id": "FUNC-005",
+      "category": "Unintended / Spurious Function",
+      "syntactical_description": "Uncommanded disconnecting of motor circuit without overload present",
+      "defect_code": "DC-4c19901a",
+      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-005-DEF-05",
+      "function_id": "FUNC-005",
+      "category": "Delayed / Early Function",
+      "syntactical_description": "Disconnects motor circuit too early before actual overload threshold is reached",
+      "defect_code": "DC-08cf9882",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-005-ISF-06",
+      "function_id": "FUNC-005",
+      "category": "Inability to Stop Function",
+      "syntactical_description": "Fails to cease disconnecting motor circuit preventing manual reset",
+      "defect_code": "DC-350fcf18",
+      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-005-ERF-07",
+      "function_id": "FUNC-005",
+      "category": "Erratic Function",
+      "syntactical_description": "Erratically disconnects motor circuit with unpredictable trip behavior",
+      "defect_code": "DC-30b1c90c",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-006-TLF-01",
+      "function_id": "FUNC-006",
+      "category": "Total Loss of Function",
+      "syntactical_description": "Fails to signal trip status to the monitoring system",
+      "defect_code": "DC-d879ee0b",
+      "end_effect": "Total inability to interface, physically or digitally, with required external systems or accessories.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-006-PDF-02",
+      "function_id": "FUNC-006",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Signals trip status with insufficient reliability due to degraded contact surface",
+      "defect_code": "DC-31acaefe",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-006-ITF-03",
+      "function_id": "FUNC-006",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently signals trip status with unstable auxiliary contact",
+      "defect_code": "DC-58a8f52c",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-006-USF-04",
+      "function_id": "FUNC-006",
+      "category": "Unintended / Spurious Function",
+      "syntactical_description": "Uncommanded signaling of trip status without actual overload trip",
+      "defect_code": "DC-541ab252",
+      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-006-DEF-05",
+      "function_id": "FUNC-006",
+      "category": "Delayed / Early Function",
+      "syntactical_description": "Signals trip status too late after mechanical trip has occurred",
+      "defect_code": "DC-a17c4cb2",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-006-ISF-06",
+      "function_id": "FUNC-006",
+      "category": "Inability to Stop Function",
+      "syntactical_description": "Fails to cease signaling trip status after relay is reset",
+      "defect_code": "DC-3b6077b8",
+      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-006-ERF-07",
+      "function_id": "FUNC-006",
+      "category": "Erratic Function",
+      "syntactical_description": "Erratically signals trip status with corrupted indication",
+      "defect_code": "DC-fb4e210f",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-007-TLF-01",
+      "function_id": "FUNC-007",
+      "category": "Total Loss of Function",
+      "syntactical_description": "Fails to switch motor circuit between ON and OFF positions",
+      "defect_code": "DC-f84535ff",
+      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-007-PDF-02",
+      "function_id": "FUNC-007",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Switches motor circuit with insufficient contact pressure causing degraded performance",
+      "defect_code": "DC-6429afb1",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-007-ITF-03",
+      "function_id": "FUNC-007",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently switches motor circuit due to worn detent mechanism",
+      "defect_code": "DC-fb03ebf0",
+      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-007-USF-04",
+      "function_id": "FUNC-007",
+      "category": "Unintended / Spurious Function",
+      "syntactical_description": "Uncommanded switching of motor circuit from vibration or shock",
+      "defect_code": "DC-07908bb4",
+      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-007-DEF-05",
+      "function_id": "FUNC-007",
+      "category": "Delayed / Early Function",
+      "syntactical_description": "Switches motor circuit with delayed mechanical response",
+      "defect_code": "DC-c0630900",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-007-ISF-06",
+      "function_id": "FUNC-007",
+      "category": "Inability to Stop Function",
+      "syntactical_description": "Fails to cease switching motor circuit when moved to OFF position",
+      "defect_code": "DC-be445859",
+      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-007-ERF-07",
+      "function_id": "FUNC-007",
+      "category": "Erratic Function",
+      "syntactical_description": "Erratically switches motor circuit with unreliable position detent",
+      "defect_code": "DC-b9b4c32d",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-008-TLF-01",
+      "function_id": "FUNC-008",
+      "category": "Total Loss of Function",
+      "syntactical_description": "Fails to limit overload current allowing unprotected motor operation",
+      "defect_code": "DC-4aa0d89a",
+      "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-008-PDF-02",
+      "function_id": "FUNC-008",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Limits overload current at insufficient accuracy due to degraded thermal calibration",
+      "defect_code": "DC-bb63ef40",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-008-ITF-03",
+      "function_id": "FUNC-008",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently limits overload current with inconsistent trip response",
+      "defect_code": "DC-cb5cc3c1",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-008-USF-04",
+      "function_id": "FUNC-008",
+      "category": "Unintended / Spurious Function",
+      "syntactical_description": "Uncommanded limiting of overload current causes nuisance trip at normal load",
+      "defect_code": "DC-f013547d",
+      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-008-DEF-05",
+      "function_id": "FUNC-008",
+      "category": "Delayed / Early Function",
+      "syntactical_description": "Limits overload current too late exceeding the Class 10 tripping curve",
+      "defect_code": "DC-30e3a089",
+      "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-008-ISF-06",
+      "function_id": "FUNC-008",
+      "category": "Inability to Stop Function",
+      "syntactical_description": "Fails to cease limiting overload current preventing motor restart after reset",
+      "defect_code": "DC-0558884b",
+      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-008-ERF-07",
+      "function_id": "FUNC-008",
+      "category": "Erratic Function",
+      "syntactical_description": "Erratically limits overload current with unstable trip threshold",
+      "defect_code": "DC-17d82adb",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-009-TLF-01",
+      "function_id": "FUNC-009",
+      "category": "Total Loss of Function",
+      "syntactical_description": "Fails to interrupt short-circuit current during fault condition",
+      "defect_code": "DC-d014907e",
+      "end_effect": "Catastrophic physical failure resulting in fire, explosion, or high-energy release.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-009-PDF-02",
+      "function_id": "FUNC-009",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Interrupts short-circuit current with insufficient speed causing degraded protection",
+      "defect_code": "DC-8addbd21",
+      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-009-ITF-03",
+      "function_id": "FUNC-009",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently interrupts short-circuit current with unreliable magnetic trip",
+      "defect_code": "DC-26e074e9",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-009-USF-04",
+      "function_id": "FUNC-009",
+      "category": "Unintended / Spurious Function",
+      "syntactical_description": "Uncommanded interrupting of short-circuit current during normal inrush",
+      "defect_code": "DC-49d47a15",
+      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-009-DEF-05",
+      "function_id": "FUNC-009",
+      "category": "Delayed / Early Function",
+      "syntactical_description": "Interrupts short-circuit current too late allowing equipment damage",
+      "defect_code": "DC-9caa7ada",
+      "end_effect": "Catastrophic physical failure resulting in fire, explosion, or high-energy release.",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-009-ISF-06",
+      "function_id": "FUNC-009",
+      "category": "Inability to Stop Function",
+      "syntactical_description": "Fails to cease interrupting short-circuit current preventing circuit re-energization",
+      "defect_code": "DC-5b265917",
+      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-009-ERF-07",
+      "function_id": "FUNC-009",
+      "category": "Erratic Function",
+      "syntactical_description": "Erratically interrupts short-circuit current with unpredictable trip threshold",
+      "defect_code": "DC-3a35a7a4",
+      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "severity": 4
+    }
+  ]
+};
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const colors = {
+            "System": "var(--color-system)",
+            "Subsystem": "var(--color-subsystem)",
+            "Component": "var(--color-component)",
+            "Function": "var(--color-function)",
+            "Failure Mode": "var(--color-failure)"
+        };
+
+        const svg = d3.select("#graph-container")
+            .attr("width", width)
+            .attr("height", height);
+
+        const g = svg.append("g");
+
+        const zoom = d3.zoom()
+            .scaleExtent([0.1, 4])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
+
+        let nodes = [];
+        let links = [];
+        let simulation;
+        let rootData = defectData;
+
+        // --- File Handling ---
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    initGraph(data);
+                } catch (err) {
+                    alert("Error parsing JSON: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function initGraph(data) {
+            if (simulation) simulation.stop();
+            
+            // Build the internal tree-like structure for expansion logic
+            const allNodesMap = new Map();
+            
+            // 1. Hierarchy Nodes
+            data.hierarchy.forEach(h => {
+                const node = {
+                    id: h.node_id,
+                    name: h.name,
+                    type: h.level,
+                    description: h.description,
+                    parentId: h.parent_id,
+                    children: [],
+                    _children: [], // For collapsed state
+                    collapsed: h.level !== "System" // Collapse by default except root
+                };
+                allNodesMap.set(node.id, node);
+            });
+
+            // 2. Function Nodes
+            data.functions.forEach(f => {
+                const nodeId = f.function_id;
+                const node = {
+                    id: nodeId,
+                    name: `${f.verb} ${f.noun}`,
+                    type: "Function",
+                    verb: f.verb,
+                    noun: f.noun,
+                    children: [],
+                    _children: [],
+                    collapsed: true
+                };
+                allNodesMap.set(nodeId, node);
+                
+                // Link to allocated components
+                f.allocations.forEach(alloc => {
+                    const parent = allNodesMap.get(alloc.node_id);
+                    if (parent) {
+                        node.parentId = alloc.node_id;
+                        parent.children.push(node);
+                    }
+                });
+            });
+
+            // 3. Failure Mode Nodes
+            data.failure_modes.forEach(fm => {
+                const nodeId = fm.failure_id;
+                const node = {
+                    id: nodeId,
+                    name: fm.syntactical_description,
+                    type: "Failure Mode",
+                    detail: fm,
+                    children: [],
+                    _children: [],
+                    collapsed: true
+                };
+                allNodesMap.set(nodeId, node);
+                
+                const parent = allNodesMap.get(fm.function_id);
+                if (parent) {
+                    node.parentId = fm.function_id;
+                    parent.children.push(node);
+                }
+            });
+
+            // Build hierarchy links
+            data.hierarchy.forEach(h => {
+                if (h.parent_id) {
+                    const parent = allNodesMap.get(h.parent_id);
+                    const child = allNodesMap.get(h.node_id);
+                    if (parent && child) parent.children.push(child);
+                }
+            });
+
+            // Find roots
+            const roots = Array.from(allNodesMap.values()).filter(d => !d.parentId);
+            
+            // Reset existing state
+            nodes = [];
+            links = [];
+            
+            // Initial flattening for visible nodes
+            updateGraph(roots);
+        }
+
+        function updateGraph(rootNodes) {
+            const visibleNodes = [];
+            const visibleLinks = [];
+
+            function traverse(d) {
+                visibleNodes.push(d);
+                if (!d.collapsed && d.children) {
+                    d.children.forEach(child => {
+                        visibleLinks.push({ source: d.id, target: child.id });
+                        traverse(child);
+                    });
+                }
+            }
+
+            rootNodes.forEach(traverse);
+
+            // Re-map nodes to handle D3 force object references
+            const d3Nodes = visibleNodes.map(d => {
+                const existing = nodes.find(n => n.id === d.id);
+                if (existing) {
+                    // Preserve position if already exists
+                    return Object.assign(existing, d);
+                }
+                return d;
+            });
+            nodes = d3Nodes;
+
+            const d3Links = visibleLinks.map(l => {
+                return {
+                    source: l.source,
+                    target: l.target
+                };
+            });
+            links = d3Links;
+
+            render();
+        }
+
+        function render() {
+            if (simulation) simulation.stop();
+
+            simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id).distance(100))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collision", d3.forceCollide().radius(50))
+                .on("tick", ticked);
+
+            // Update links
+            const link = g.selectAll(".link")
+                .data(links, d => `${d.source.id}-${d.target.id}`);
+
+            link.exit().remove();
+
+            const linkEnter = link.enter()
+                .append("line")
+                .attr("class", "link");
+
+            const linkMerge = linkEnter.merge(link);
+
+            // Update nodes
+            const node = g.selectAll(".node-group")
+                .data(nodes, d => d.id);
+
+            node.exit().remove();
+
+            const nodeEnter = node.enter()
+                .append("g")
+                .attr("class", "node-group")
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended))
+                .on("click", (event, d) => {
+                    handleNodeClick(d);
+                });
+
+            nodeEnter.append("circle")
+                .attr("class", "node")
+                .attr("r", d => d.type === "System" ? 12 : d.type === "Subsystem" ? 9 : 6)
+                .attr("fill", d => colors[d.type]);
+
+            nodeEnter.append("text")
+                .attr("class", "node-label")
+                .attr("dy", 20)
+                .attr("text-anchor", "middle")
+                .text(d => d.name.length > 20 ? d.name.substring(0, 18) + "..." : d.name);
+
+            const nodeMerge = nodeEnter.merge(node);
+
+            function ticked() {
+                linkMerge
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                nodeMerge
+                    .attr("transform", d => `translate(${d.x},${d.y})`);
+            }
+        }
+
+        function handleNodeClick(d) {
+            // Expansion logic
+            if (d.children && d.children.length > 0) {
+                d.collapsed = !d.collapsed;
+                const roots = nodes.filter(n => !n.parentId);
+                updateGraph(roots);
+            }
+
+            // Show details
+            showDetails(d);
+        }
+
+        function showDetails(d) {
+            const panel = d3.select("#details-panel");
+            const content = d3.select("#detail-content");
+            document.getElementById("detail-title").innerText = d.name;
+            
+            let html = `
+                <div class="detail-item">
+                    <div class="detail-label">Type</div>
+                    <div class="badge" style="background: ${colors[d.type]}22; color: ${colors[d.type]}">${d.type}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">ID</div>
+                    <div class="detail-value">${d.id}</div>
+                </div>
+            `;
+
+            if (d.description) {
+                html += `
+                    <div class="detail-item">
+                        <div class="detail-label">Description</div>
+                        <div class="detail-value">${d.description}</div>
+                    </div>
+                `;
+            }
+
+            if (d.type === "Failure Mode") {
+                const fm = d.detail;
+                html += `
+                    <div class="detail-item">
+                        <div class="detail-label">Defect Code</div>
+                        <div class="detail-value" style="font-family: monospace; font-weight: bold; color: var(--primary-accent)">${fm.defect_code}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Category</div>
+                        <div class="detail-value">${fm.category}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">End Effect</div>
+                        <div class="detail-value">${fm.end_effect}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Severity</div>
+                        <div class="detail-value">
+                            <span style="color: ${fm.severity >= 8 ? '#ef4444' : fm.severity >= 5 ? '#f59e0b' : '#10b981'}">
+                                ${fm.severity} / 10
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            content.html(html);
+            panel.style("display", "block");
+        }
+
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        function resetZoom() {
+            svg.transition().duration(750).call(
+                zoom.transform,
+                d3.zoomIdentity
+            );
+        }
+
+        function expandAll() {
+            function expand(d) {
+                d.collapsed = false;
+                if (d.children) d.children.forEach(expand);
+            }
+            const roots = nodes.filter(n => !n.parentId);
+            roots.forEach(expand);
+            updateGraph(roots);
+        }
+
+        function collapseAll() {
+            function collapse(d) {
+                if (d.type !== "System") d.collapsed = true;
+                if (d.children) d.children.forEach(collapse);
+            }
+            const roots = nodes.filter(n => !n.parentId);
+            roots.forEach(collapse);
+            updateGraph(roots);
+        }
+
+        window.addEventListener("resize", () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            svg.attr("width", width).attr("height", height);
+            simulation.force("center", d3.forceCenter(width / 2, height / 2));
+            simulation.alpha(0.3).restart();
+        });
+
+        // Start initialization
+        initGraph(defectData);
+
+    </script>
+</body>
+</html>

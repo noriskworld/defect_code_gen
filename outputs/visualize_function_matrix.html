@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Traceability Matrix</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --primary-accent: #38bdf8;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --grid-line: rgba(255, 255, 255, 0.05);
+            
+            --color-system: #fbbf24;
+            --color-subsystem: #22d3ee;
+            --color-component: #818cf8;
+            --color-function: #34d399;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        #matrix-container {
+            width: 100%;
+            height: calc(100% - 80px);
+            overflow: auto;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        #header {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        #header h1 {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            background: linear-gradient(to right, #34d399, #38bdf8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .matrix-svg {
+            shape-rendering: crispEdges;
+        }
+
+        .cell {
+            stroke: var(--grid-line);
+            stroke-width: 0.5px;
+            transition: fill 0.2s;
+        }
+
+        .cell.highlighted {
+            fill: rgba(56, 189, 248, 0.1) !important;
+        }
+
+        .row-label, .col-label {
+            font-size: 11px;
+            fill: #94a3b8;
+            cursor: pointer;
+            transition: fill 0.2s, font-weight 0.2s;
+        }
+
+        .row-label:hover, .col-label:hover {
+            fill: var(--text-color);
+            font-weight: 600;
+        }
+
+        .row-label.active, .col-label.active {
+            fill: var(--primary-accent);
+            font-weight: 600;
+        }
+
+        .dot {
+            transition: r 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+        }
+
+        .dot:hover {
+            filter: brightness(1.3) drop-shadow(0 0 4px var(--color-function));
+        }
+
+        #tooltip {
+            position: absolute;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .tooltip-title {
+            font-weight: 700;
+            color: var(--primary-accent);
+            margin-bottom: 4px;
+        }
+
+        .tooltip-meta {
+            color: #64748b;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .col-group-line {
+            stroke: var(--glass-border);
+            stroke-width: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <h1>Function Traceability Matrix</h1>
+        <div class="controls">
+            <button class="btn" onclick="sortMatrix('name')">Sort by Name</button>
+            <button class="btn" onclick="sortMatrix('verb')">Sort by Verb</button>
+            <label for="json-upload" class="btn" style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                </svg>
+                Load JSON
+            </label>
+            <input type="file" id="json-upload" accept=".json" style="display: none;" onchange="handleFileSelect(event)">
+        </div>
+    </div>
+
+    <div id="matrix-container">
+        <svg id="matrix-svg"></svg>
+    </div>
+
+    <div id="tooltip"></div>
+
+    <script>
+        const margin = { top: 150, right: 50, bottom: 50, left: 180 };
+        const cellSize = 24;
+        
+        let rawData;
+        let functions = [];
+        let components = [];
+        let matrix = [];
+        
+        const svg = d3.select("#matrix-svg");
+        const tooltip = d3.select("#tooltip");
+
+        const defectData = {
+          "metadata": {
+            "product_family": "Easy TeSys Motor Control",
+            "version": "1.0"
+          },
+          "hierarchy": [
+            {
+              "node_id": "SYS-001",
+              "parent_id": null,
+              "name": "Easy TeSys Motor Control System",
+              "level": "System",
+              "description": "Schneider Electric Easy TeSys product family for industrial motor starting, protection, and control up to 690V."
+            },
+            {
+              "node_id": "SUB-001",
+              "parent_id": "SYS-001",
+              "name": "3-Pole Contactor Assembly",
+              "level": "Subsystem",
+              "description": "DPE-series 3-pole contactors (9A–38A, AC-3) for switching and controlling 3-phase motor loads."
+            },
+            {
+              "node_id": "SUB-002",
+              "parent_id": "SYS-001",
+              "name": "Thermal Overload Relay Assembly",
+              "level": "Subsystem",
+              "description": "DPER-series Class 10 thermal overload relays (0.1A–32A) providing motor overload protection with phase-loss sensitivity."
+            },
+            {
+              "node_id": "SUB-003",
+              "parent_id": "SYS-001",
+              "name": "Manual Motor Controller",
+              "level": "Subsystem",
+              "description": "GP2E-series manual motor controllers with integrated thermal and magnetic protection, suitable for isolation per IEC 60947."
+            },
+            {
+              "node_id": "COMP-001",
+              "parent_id": "SUB-001",
+              "name": "Power Contacts (3-Pole)",
+              "level": "Component",
+              "description": "Three main power switching contacts rated 9–38A (AC-3), 690V max operational voltage, 1 million electrical durability cycles."
+            },
+            {
+              "node_id": "COMP-002",
+              "parent_id": "SUB-001",
+              "name": "Electromagnetic Coil",
+              "level": "Component",
+              "description": "AC (24–240V) or DC (24V) excitation coil that generates the magnetic force to close the power contacts. Inrush 70VA, sealed 7VA."
+            },
+            {
+              "node_id": "COMP-003",
+              "parent_id": "SUB-001",
+              "name": "Auxiliary Contact (Integrated)",
+              "level": "Component",
+              "description": "1 NO or 1 NC instantaneous auxiliary contact rated 10A, 690V, 30 million mechanical cycles. Provides status signaling."
+            },
+            {
+              "node_id": "COMP-004",
+              "parent_id": "SUB-001",
+              "name": "Auxiliary Contact Block (DPEAN11)",
+              "level": "Component",
+              "description": "Front-mount clip-on auxiliary contact block providing 1 NO + 1 NC contacts, rated 10A/690V, 30 million mechanical cycles."
+            },
+            {
+              "node_id": "COMP-005",
+              "parent_id": "SUB-002",
+              "name": "Thermal Sensing Element (Bimetallic)",
+              "level": "Component",
+              "description": "Bimetallic current-sensing element with temperature compensation (-20 to +60°C) that trips at 1.14 ± 0.06 × Ir."
+            },
+            {
+              "node_id": "COMP-006",
+              "parent_id": "SUB-002",
+              "name": "Trip Mechanism",
+              "level": "Component",
+              "description": "Mechanical trip mechanism actuated by the bimetallic element, with manual reset capability and phase-loss detection."
+            },
+            {
+              "node_id": "COMP-007",
+              "parent_id": "SUB-002",
+              "name": "Overload Relay Auxiliary Contacts",
+              "level": "Component",
+              "description": "Auxiliary contacts providing trip status signaling, IP2X protection, conforming to IEC 60947-5-1."
+            },
+            {
+              "node_id": "COMP-008",
+              "parent_id": "SUB-003",
+              "name": "Manual Switch Mechanism",
+              "level": "Component",
+              "description": "Rotary or toggle switch mechanism providing ON/OFF/TRIP positions, suitable for isolation per IEC 60947-1 §7-1-6."
+            },
+            {
+              "node_id": "COMP-009",
+              "parent_id": "SUB-003",
+              "name": "Thermal Trip Unit",
+              "level": "Component",
+              "description": "Adjustable thermal overload trip element (0.1–32A setting range), Class 10 tripping characteristic."
+            },
+            {
+              "node_id": "COMP-010",
+              "parent_id": "SUB-003",
+              "name": "Magnetic Trip Unit",
+              "level": "Component",
+              "description": "Instantaneous magnetic short-circuit trip element with fixed trip current (Id ±20%), providing short-circuit protection."
+            }
+          ],
+          "functions": [
+            {
+              "function_id": "FUNC-001",
+              "verb": "conduct",
+              "noun": "current",
+              "allocations": [
+                {
+                  "node_id": "COMP-001",
+                  "support_level": "Primary"
+                }
+              ]
+            },
+            {
+              "function_id": "FUNC-002",
+              "verb": "generate",
+              "noun": "magnetic force",
+              "allocations": [
+                {
+                  "node_id": "COMP-002",
+                  "support_level": "Primary"
+                }
+              ]
+            },
+            {
+              "function_id": "FUNC-003",
+              "verb": "signal",
+              "noun": "contact status",
+              "allocations": [
+                {
+                  "node_id": "COMP-003",
+                  "support_level": "Primary"
+                },
+                {
+                  "node_id": "COMP-004",
+                  "support_level": "Primary"
+                }
+              ]
+            },
+            {
+              "function_id": "FUNC-004",
+              "verb": "sense",
+              "noun": "overload current",
+              "allocations": [
+                {
+                  "node_id": "COMP-005",
+                  "support_level": "Primary"
+                }
+              ]
+            },
+            {
+              "function_id": "FUNC-005",
+              "verb": "disconnect",
+              "noun": "motor circuit",
+              "allocations": [
+                {
+                  "node_id": "COMP-006",
+                  "support_level": "Primary"
+                }
+              ]
+            },
+            {
+              "function_id": "FUNC-006",
+              "verb": "signal",
+              "noun": "trip status",
+              "allocations": [
+                {
+                  "node_id": "COMP-007",
+                  "support_level": "Primary"
+                }
+              ]
+            },
+            {
+              "function_id": "FUNC-007",
+              "verb": "switch",
+              "noun": "motor circuit",
+              "allocations": [
+                {
+                  "node_id": "COMP-008",
+                  "support_level": "Primary"
+                }
+              ]
+            },
+            {
+              "function_id": "FUNC-008",
+              "verb": "limit",
+              "noun": "overload current",
+              "allocations": [
+                {
+                  "node_id": "COMP-009",
+                  "support_level": "Primary"
+                }
+              ]
+            },
+            {
+              "function_id": "FUNC-009",
+              "verb": "interrupt",
+              "noun": "short-circuit current",
+              "allocations": [
+                {
+                  "node_id": "COMP-010",
+                  "support_level": "Primary"
+                }
+              ]
+            }
+          ]
+        };
+
+        // --- File Handling ---
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    initData(data);
+                } catch (err) {
+                    alert("Error parsing JSON: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function initData(data) {
+            rawData = data;
+            
+            // Prepare Components (Columns)
+            components = data.hierarchy.filter(h => h.level !== "System").map(h => ({
+                id: h.node_id,
+                name: h.name,
+                level: h.level,
+                parentId: h.parent_id
+            }));
+
+            // Prepare Functions (Rows)
+            functions = data.functions.map(f => ({
+                id: f.function_id,
+                name: `${f.verb} ${f.noun}`,
+                verb: f.verb,
+                noun: f.noun,
+                allocations: f.allocations
+            }));
+
+            initMatrix();
+            render();
+        }
+
+        // Initialize with default data
+        initData(defectData);
+
+        function initMatrix() {
+            matrix = [];
+            functions.forEach((f, i) => {
+                components.forEach((c, j) => {
+                    const allocation = f.allocations.find(a => a.node_id === c.id);
+                    matrix.push({
+                        row: i,
+                        col: j,
+                        value: allocation ? 1 : 0,
+                        support: allocation ? allocation.support_level : null,
+                        function: f,
+                        component: c
+                    });
+                });
+            });
+        }
+
+        function render() {
+            const width = components.length * cellSize + margin.left + margin.right;
+            const height = functions.length * cellSize + margin.top + margin.bottom;
+
+            svg.attr("width", width).attr("height", height);
+            svg.selectAll("*").remove();
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Cells
+            g.selectAll(".cell")
+                .data(matrix)
+                .enter()
+                .append("rect")
+                .attr("class", "cell")
+                .attr("x", d => d.col * cellSize)
+                .attr("y", d => d.row * cellSize)
+                .attr("width", cellSize)
+                .attr("height", cellSize)
+                .attr("fill", "transparent")
+                .on("mouseover", function(event, d) {
+                    d3.select(this).classed("highlighted", true);
+                    highlightLabels(d.row, d.col, true);
+                    showTooltip(event, d);
+                })
+                .on("mouseout", function(event, d) {
+                    d3.select(this).classed("highlighted", false);
+                    highlightLabels(d.row, d.col, false);
+                    tooltip.style("display", "none");
+                });
+
+            // Dots for allocations
+            g.selectAll(".dot")
+                .data(matrix.filter(d => d.value > 0))
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => d.col * cellSize + cellSize / 2)
+                .attr("cy", d => d.row * cellSize + cellSize / 2)
+                .attr("r", 6)
+                .attr("fill", d => d.support === "Primary" ? "var(--color-function)" : "rgba(52, 211, 153, 0.5)")
+                .attr("pointer-events", "none");
+
+            // Row labels
+            g.selectAll(".row-label")
+                .data(functions)
+                .enter()
+                .append("text")
+                .attr("class", d => `row-label row-label-${functions.indexOf(d)}`)
+                .attr("x", -10)
+                .attr("y", (d, i) => i * cellSize + cellSize / 2)
+                .attr("dy", ".35em")
+                .attr("text-anchor", "end")
+                .text(d => d.name);
+
+            // Column labels
+            g.selectAll(".col-label")
+                .data(components)
+                .enter()
+                .append("text")
+                .attr("class", d => `col-label col-label-${components.indexOf(d)}`)
+                .attr("x", (d, i) => i * cellSize + cellSize / 2)
+                .attr("y", -10)
+                .attr("transform", (d, i) => `rotate(-45, ${i * cellSize + cellSize / 2}, -10)`)
+                .attr("text-anchor", "start")
+                .text(d => d.name);
+            
+            // Grid lines
+            g.append("g").attr("class", "lines")
+                .selectAll("line.row")
+                .data(functions)
+                .enter().append("line")
+                .attr("x1", 0).attr("x2", components.length * cellSize)
+                .attr("y1", (d,i) => (i+1) * cellSize).attr("y2", (d,i) => (i+1) * cellSize)
+                .attr("stroke", "var(--grid-line)");
+
+            g.append("g").attr("class", "lines")
+                .selectAll("line.col")
+                .data(components)
+                .enter().append("line")
+                .attr("y1", 0).attr("y2", functions.length * cellSize)
+                .attr("x1", (d,i) => (i+1) * cellSize).attr("x2", (d,i) => (i+1) * cellSize)
+                .attr("stroke", "var(--grid-line)");
+        }
+
+        function highlightLabels(rowIdx, colIdx, active) {
+            d3.select(`.row-label-${rowIdx}`).classed("active", active);
+            d3.select(`.col-label-${colIdx}`).classed("active", active);
+        }
+
+        function showTooltip(event, d) {
+            tooltip
+                .style("display", "block")
+                .style("left", (event.pageX + 15) + "px")
+                .style("top", (event.pageY - 15) + "px")
+                .html(`
+                    <div class="tooltip-meta">${d.component.level} Allocation</div>
+                    <div class="tooltip-title">${d.function.name}</div>
+                    <div style="margin-bottom: 8px;">Allocated to: ${d.component.name}</div>
+                    ${d.value > 0 ? `
+                        <div style="font-size: 0.75rem; color: var(--color-function)">
+                            ● ${d.support} Support
+                        </div>
+                    ` : `<div style="color: #64748b">No Direct Allocation</div>`}
+                `);
+        }
+
+        function sortMatrix(type) {
+            if (type === 'verb') {
+                functions.sort((a, b) => a.verb.localeCompare(b.verb));
+            } else {
+                functions.sort((a, b) => a.name.localeCompare(b.name));
+            }
+            initMatrix();
+            render();
+        }
+
+    </script>
+</body>
+</html>
