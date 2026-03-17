@@ -35,7 +35,7 @@ inputs/LVPED216026EN.pdf
 *.pdf.heavy
 
 # Generated Outputs
-outputs/
+# outputs/
 
 # OS
 Thumbs.db
