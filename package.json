@@ -1,0 +1,8 @@
+{
+  "name": "defect-code-gen",
+  "version": "1.0.0",
+  "description": "FMEA Defect Code Generation",
+  "scripts": {
+    "flipbook:check": "node tools/flipbook-check.js"
+  }
+}

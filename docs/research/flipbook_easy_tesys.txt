@@ -1,0 +1,24 @@
+
+> defect-code-gen@1.0.0 flipbook:check
+> node tools/flipbook-check.js --product easy tesys
+
+
+=== Flipbook Product Intelligence: Easy TeSys DPE ===
+Hierarchy: Motor Starters > Easy TeSys Contactors
+Pages Detected: B8/12, B8/13, B8/14
+
+-- Extracted Functions / Use Cases --
+ * overload protection
+ * motor control
+ * switching resistive loads
+ * isolation
+
+-- Detected Standards --
+ * IEC 60947-4-1
+ * IEC 60947-5-1
+ * EN 60947
+ * UL 508
+ * CSA C22.2
+
+Confidence: High
+

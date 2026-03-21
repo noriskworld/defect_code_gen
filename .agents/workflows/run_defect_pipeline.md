@@ -31,19 +31,43 @@ Run this workflow to process a product manual through all 5 phases and produce a
 **Stop and present the hierarchy to the user for visual approval.** Do not proceed until confirmed.
 
 ---
+## Phase 2: Functional Analysis (INCOSE)
 
-## Phase 2: Draft Failure Mode Generation
+6. **Initial Extraction**: For the product query NotebookLM:
+   - Prompt: *"Extract the primary functional requirements for [product] from the documentation. Provide the raw text as found."*
+7. **Function Analyst role (INCOSE Refinement)**:
+   - Analyze each requirement against **INCOSE Guidelines**:
+     - **Singularity**: Does it express only ONE capability? (Avoid "and/or").
+     - **Verifiability**: Is it measurable/testable? (Remove "as far as possible", "high quality").
+     - **Unambiguity**: Is it clear and interpretation-free? (Replace "immediately" with "within X ms").
+   - **Rewrite**: Create a high-quality version of each failing requirement.
+   - **Format**: Present a table with columns: `Req. ID`, `Original Requirement`, `Revised Requirement`, `Analysis Notes`.
+8. Save refined functions to `/tmp/functions.json`.
 
-6. **Reliability Engineer role:** For each leaf component in the hierarchy:
-   - Query NotebookLM: *"What is the primary physical function of [component]? Express as a single [Verb] + [Noun] pair."*
-   - Apply the 7 syntactical derivation rules to generate draft failure modes.
-   - Save drafts to `/tmp/draft_fm.json` (array of `{category, syntactical_description}`).
+### 🚦 Gate 2 (HITL)
+**Present the Functional Requirements Table to the user for approval.**
 
 ---
 
-## Phase 3: Deterministic Verification
+## Phase 3: Draft Failure Mode Generation
 
-7. **Run the JSON Validator skill:**
+9. **Reliability Engineer role**: For each *approved* functional requirement:
+   - Derive a strict **[Verb] + [Noun]** pair (e.g., "Conduct Current").
+   - Apply the 7 syntactical derivation rules to generate draft failure modes:
+     1. **Total Loss of Function**: "Fails to [Verb] [Noun]"
+     2. **Partial Loss of Function**: "Provides degraded [Verb] [Noun]"
+     3. **Over-Function**: "Provides excessive [Verb] [Noun]"
+     4. **Intermittent Function**: "Intermittently [Verb] [Noun]"
+     5. **Degraded Function**: "[Verb] [Noun] outside specified limits"
+     6. **Unintended/Spurious Function**: "[Verb] [Noun] without command"
+     7. **Delayed/Early Function**: "[Verb] [Noun] too late/early"
+   - Save drafts to `/tmp/draft_fm.json`.
+
+---
+
+## Phase 4: Deterministic Verification
+
+10. **Run the JSON Validator skill:**
    ```bash
    ~/.gemini/antigravity/.venv/bin/python ~/.gemini/antigravity/skills/json_validator/scripts/validator.py \
      --input /tmp/draft_fm.json \
@@ -51,16 +75,16 @@ Run this workflow to process a product manual through all 5 phases and produce a
      --function-noun "<noun>"
    ```
 
-### 🚦 Gate 2 (Auto-Retry, max 3 attempts)
+### 🚦 Gate 3 (Auto-Retry, max 3 attempts)
 - If exit code 1: read the error JSON, fix the specific failure mode, regenerate, and re-validate.
 - If 3 failures: escalate to user (HITL).
 
 ---
 
-## Phase 4: Taxonomy Enrichment
+## Phase 5: Taxonomy Enrichment
 
-8. **Reliability Engineer role:** For each validated failure mode, use Chain-of-Thought reasoning to determine the system-level end effect.
-9. **Run the Taxonomy Manager skill:**
+10. **Reliability Engineer role:** For each validated failure mode, use Chain-of-Thought reasoning to determine the system-level end effect.
+11. **Run the Taxonomy Manager skill:**
    ```bash
    ~/.gemini/antigravity/.venv/bin/python ~/.gemini/antigravity/skills/taxonomy_manager/scripts/taxonomy_lookup.py \
      --effect "<proposed_end_effect>" \
@@ -71,7 +95,7 @@ Run this workflow to process a product manual through all 5 phases and produce a
 
 ---
 
-## Phase 5: Assembly & Export
+## Phase 6: Assembly & Export
 
 12. **Run the Assembly script:**
     ```bash
