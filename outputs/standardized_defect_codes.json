@@ -1,208 +1,135 @@
 {
   "metadata": {
-    "product_family": "Easy TeSys Motor Control",
+    "product_family": "Easy TeSys DPE",
     "version": "1.0"
   },
   "hierarchy": [
     {
-      "node_id": "SYS-001",
+      "node_id": "SYS-01",
       "parent_id": null,
-      "name": "Easy TeSys Motor Control System",
-      "level": "System",
-      "description": "Schneider Electric Easy TeSys product family for industrial motor starting, protection, and control up to 690V."
+      "name": "Easy TeSys Motor Starter",
+      "level": "System"
     },
     {
-      "node_id": "SUB-001",
-      "parent_id": "SYS-001",
-      "name": "3-Pole Contactor Assembly",
-      "level": "Subsystem",
-      "description": "DPE-series 3-pole contactors (9A\u201338A, AC-3) for switching and controlling 3-phase motor loads."
+      "node_id": "SUB-01",
+      "parent_id": "SYS-01",
+      "name": "DPE Contactor Assembly",
+      "level": "Subsystem"
     },
     {
-      "node_id": "SUB-002",
-      "parent_id": "SYS-001",
-      "name": "Thermal Overload Relay Assembly",
-      "level": "Subsystem",
-      "description": "DPER-series Class 10 thermal overload relays (0.1A\u201332A) providing motor overload protection with phase-loss sensitivity."
+      "node_id": "SUB-02",
+      "parent_id": "SYS-01",
+      "name": "DPER Overload Relay",
+      "level": "Subsystem"
     },
     {
-      "node_id": "SUB-003",
-      "parent_id": "SYS-001",
-      "name": "Manual Motor Controller",
-      "level": "Subsystem",
-      "description": "GP2E-series manual motor controllers with integrated thermal and magnetic protection, suitable for isolation per IEC 60947."
-    },
-    {
-      "node_id": "COMP-001",
-      "parent_id": "SUB-001",
-      "name": "Power Contacts (3-Pole)",
-      "level": "Component",
-      "description": "Three main power switching contacts rated 9\u201338A (AC-3), 690V max operational voltage, 1 million electrical durability cycles."
-    },
-    {
-      "node_id": "COMP-002",
-      "parent_id": "SUB-001",
-      "name": "Electromagnetic Coil",
-      "level": "Component",
-      "description": "AC (24\u2013240V) or DC (24V) excitation coil that generates the magnetic force to close the power contacts. Inrush 70VA, sealed 7VA."
-    },
-    {
-      "node_id": "COMP-003",
-      "parent_id": "SUB-001",
-      "name": "Auxiliary Contact (Integrated)",
-      "level": "Component",
-      "description": "1 NO or 1 NC instantaneous auxiliary contact rated 10A, 690V, 30 million mechanical cycles. Provides status signaling."
-    },
-    {
-      "node_id": "COMP-004",
-      "parent_id": "SUB-001",
-      "name": "Auxiliary Contact Block (DPEAN11)",
-      "level": "Component",
-      "description": "Front-mount clip-on auxiliary contact block providing 1 NO + 1 NC contacts, rated 10A/690V, 30 million mechanical cycles."
-    },
-    {
-      "node_id": "COMP-005",
-      "parent_id": "SUB-002",
-      "name": "Thermal Sensing Element (Bimetallic)",
-      "level": "Component",
-      "description": "Bimetallic current-sensing element with temperature compensation (-20 to +60\u00b0C) that trips at 1.14 \u00b1 0.06 \u00d7 Ir."
-    },
-    {
-      "node_id": "COMP-006",
-      "parent_id": "SUB-002",
-      "name": "Trip Mechanism",
-      "level": "Component",
-      "description": "Mechanical trip mechanism actuated by the bimetallic element, with manual reset capability and phase-loss detection."
-    },
-    {
-      "node_id": "COMP-007",
-      "parent_id": "SUB-002",
-      "name": "Overload Relay Auxiliary Contacts",
-      "level": "Component",
-      "description": "Auxiliary contacts providing trip status signaling, IP2X protection, conforming to IEC 60947-5-1."
-    },
-    {
-      "node_id": "COMP-008",
-      "parent_id": "SUB-003",
-      "name": "Manual Switch Mechanism",
-      "level": "Component",
-      "description": "Rotary or toggle switch mechanism providing ON/OFF/TRIP positions, suitable for isolation per IEC 60947-1 \u00a77-1-6."
-    },
-    {
-      "node_id": "COMP-009",
-      "parent_id": "SUB-003",
-      "name": "Thermal Trip Unit",
-      "level": "Component",
-      "description": "Adjustable thermal overload trip element (0.1\u201332A setting range), Class 10 tripping characteristic."
-    },
-    {
-      "node_id": "COMP-010",
-      "parent_id": "SUB-003",
-      "name": "Magnetic Trip Unit",
-      "level": "Component",
-      "description": "Instantaneous magnetic short-circuit trip element with fixed trip current (Id \u00b120%), providing short-circuit protection."
+      "node_id": "SUB-03",
+      "parent_id": "SYS-01",
+      "name": "DZM Manual Controller",
+      "level": "Subsystem"
     }
   ],
   "functions": [
     {
-      "function_id": "FUNC-001",
+      "function_id": "REQ-01",
       "verb": "conduct",
       "noun": "current",
       "allocations": [
         {
-          "node_id": "COMP-001",
+          "node_id": "SUB-01",
           "support_level": "Primary"
         }
       ]
     },
     {
-      "function_id": "FUNC-002",
-      "verb": "generate",
-      "noun": "magnetic force",
+      "function_id": "REQ-02",
+      "verb": "actuate",
+      "noun": "trip mechanism",
       "allocations": [
         {
-          "node_id": "COMP-002",
+          "node_id": "SUB-02",
           "support_level": "Primary"
         }
       ]
     },
     {
-      "function_id": "FUNC-003",
-      "verb": "signal",
-      "noun": "contact status",
-      "allocations": [
-        {
-          "node_id": "COMP-003",
-          "support_level": "Primary"
-        },
-        {
-          "node_id": "COMP-004",
-          "support_level": "Primary"
-        }
-      ]
-    },
-    {
-      "function_id": "FUNC-004",
-      "verb": "sense",
-      "noun": "overload current",
-      "allocations": [
-        {
-          "node_id": "COMP-005",
-          "support_level": "Primary"
-        }
-      ]
-    },
-    {
-      "function_id": "FUNC-005",
-      "verb": "disconnect",
-      "noun": "motor circuit",
-      "allocations": [
-        {
-          "node_id": "COMP-006",
-          "support_level": "Primary"
-        }
-      ]
-    },
-    {
-      "function_id": "FUNC-006",
+      "function_id": "REQ-03",
       "verb": "signal",
       "noun": "trip status",
       "allocations": [
         {
-          "node_id": "COMP-007",
+          "node_id": "SUB-02",
           "support_level": "Primary"
         }
       ]
     },
     {
-      "function_id": "FUNC-007",
-      "verb": "switch",
-      "noun": "motor circuit",
-      "allocations": [
-        {
-          "node_id": "COMP-008",
-          "support_level": "Primary"
-        }
-      ]
-    },
-    {
-      "function_id": "FUNC-008",
-      "verb": "limit",
-      "noun": "overload current",
-      "allocations": [
-        {
-          "node_id": "COMP-009",
-          "support_level": "Primary"
-        }
-      ]
-    },
-    {
-      "function_id": "FUNC-009",
+      "function_id": "REQ-04",
       "verb": "interrupt",
-      "noun": "short-circuit current",
+      "noun": "electrical circuit",
       "allocations": [
         {
-          "node_id": "COMP-010",
+          "node_id": "SUB-03",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "REQ-05",
+      "verb": "provide",
+      "noun": "electrical isolation",
+      "allocations": [
+        {
+          "node_id": "SUB-03",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "REQ-06",
+      "verb": "signal",
+      "noun": "contact status",
+      "allocations": [
+        {
+          "node_id": "SUB-01",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "REQ-08",
+      "verb": "maintain",
+      "noun": "mechanical durability",
+      "allocations": [
+        {
+          "node_id": "SUB-01",
+          "support_level": "Primary"
+        },
+        {
+          "node_id": "SUB-02",
+          "support_level": "Primary"
+        },
+        {
+          "node_id": "SUB-03",
+          "support_level": "Primary"
+        }
+      ]
+    },
+    {
+      "function_id": "REQ-09",
+      "verb": "withstand",
+      "noun": "vibrations",
+      "allocations": [
+        {
+          "node_id": "SUB-01",
+          "support_level": "Primary"
+        },
+        {
+          "node_id": "SUB-02",
+          "support_level": "Primary"
+        },
+        {
+          "node_id": "SUB-03",
           "support_level": "Primary"
         }
       ]
@@ -210,570 +137,507 @@
   ],
   "failure_modes": [
     {
-      "failure_id": "FAIL-001-TLF-01",
-      "function_id": "FUNC-001",
+      "failure_id": "FAIL-REQ-01-TLF-01",
+      "function_id": "REQ-01",
       "category": "Total Loss of Function",
-      "syntactical_description": "Fails to conduct current through the power contacts",
-      "defect_code": "DC-b5ad9c20",
-      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "syntactical_description": "Fails to conduct current",
+      "defect_code": "DC-9305a499",
+      "end_effect": "Loss of motor drive",
       "severity": 7
     },
     {
-      "failure_id": "FAIL-001-PDF-02",
-      "function_id": "FUNC-001",
+      "failure_id": "FAIL-REQ-01-PDF-02",
+      "function_id": "REQ-01",
       "category": "Partial / Degraded Function",
-      "syntactical_description": "Conducts current at insufficient capacity due to degraded contact surface",
-      "defect_code": "DC-d3011a31",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-001-ITF-03",
-      "function_id": "FUNC-001",
-      "category": "Intermittent Function",
-      "syntactical_description": "Intermittently conducts current through the power contacts",
-      "defect_code": "DC-9e1aa9cd",
-      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+      "syntactical_description": "Provides insufficient conduct current",
+      "defect_code": "DC-6d6bde2e",
+      "end_effect": "Loss of motor drive",
       "severity": 7
     },
     {
-      "failure_id": "FAIL-001-USF-04",
-      "function_id": "FUNC-001",
+      "failure_id": "FAIL-REQ-01-PDF-03",
+      "function_id": "REQ-01",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Provides excessive conduct current",
+      "defect_code": "DC-457cc695",
+      "end_effect": "Loss of motor drive",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-REQ-01-ITF-04",
+      "function_id": "REQ-01",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently conduct current",
+      "defect_code": "DC-4dc9853b",
+      "end_effect": "Loss of motor drive",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-REQ-01-PDF-05",
+      "function_id": "REQ-01",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "conduct current below threshold",
+      "defect_code": "DC-71376f8c",
+      "end_effect": "Loss of motor drive",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-REQ-01-USF-06",
+      "function_id": "REQ-01",
       "category": "Unintended / Spurious Function",
-      "syntactical_description": "Uncommanded conducting of current through power contacts",
-      "defect_code": "DC-0ed44b90",
-      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
-      "severity": 10
+      "syntactical_description": "Uncommanded conduct current",
+      "defect_code": "DC-4564b61f",
+      "end_effect": "Loss of motor drive",
+      "severity": 7
     },
     {
-      "failure_id": "FAIL-001-DEF-05",
-      "function_id": "FUNC-001",
+      "failure_id": "FAIL-REQ-01-DEF-07",
+      "function_id": "REQ-01",
       "category": "Delayed / Early Function",
-      "syntactical_description": "Conducts current too late after coil energization command",
-      "defect_code": "DC-99896b7d",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
-      "severity": 4
+      "syntactical_description": "conduct current too late",
+      "defect_code": "DC-c6eecf01",
+      "end_effect": "Loss of motor drive",
+      "severity": 7
     },
     {
-      "failure_id": "FAIL-001-ISF-06",
-      "function_id": "FUNC-001",
-      "category": "Inability to Stop Function",
-      "syntactical_description": "Fails to cease conducting current when coil is de-energized",
-      "defect_code": "DC-44acbdbe",
-      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
-      "severity": 10
-    },
-    {
-      "failure_id": "FAIL-001-ERF-07",
-      "function_id": "FUNC-001",
-      "category": "Erratic Function",
-      "syntactical_description": "Erratically conducts current with unstable contact resistance",
-      "defect_code": "DC-d474e6ce",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-002-TLF-01",
-      "function_id": "FUNC-002",
+      "failure_id": "FAIL-REQ-02-TLF-01",
+      "function_id": "REQ-02",
       "category": "Total Loss of Function",
-      "syntactical_description": "Fails to generate magnetic force to close the contactor",
-      "defect_code": "DC-45f11c72",
-      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
-      "severity": 7
+      "syntactical_description": "Fails to actuate trip mechanism",
+      "defect_code": "DC-d6026075",
+      "end_effect": "Fire or thermal damage",
+      "severity": 9
     },
     {
-      "failure_id": "FAIL-002-PDF-02",
-      "function_id": "FUNC-002",
+      "failure_id": "FAIL-REQ-02-PDF-02",
+      "function_id": "REQ-02",
       "category": "Partial / Degraded Function",
-      "syntactical_description": "Generates insufficient magnetic force to fully seat the armature",
-      "defect_code": "DC-53c33d22",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
-      "severity": 4
+      "syntactical_description": "Provides insufficient actuate trip mechanism",
+      "defect_code": "DC-f598e39a",
+      "end_effect": "Fire or thermal damage",
+      "severity": 9
     },
     {
-      "failure_id": "FAIL-002-ITF-03",
-      "function_id": "FUNC-002",
+      "failure_id": "FAIL-REQ-02-PDF-03",
+      "function_id": "REQ-02",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Provides excessive actuate trip mechanism",
+      "defect_code": "DC-3d974fa0",
+      "end_effect": "Fire or thermal damage",
+      "severity": 9
+    },
+    {
+      "failure_id": "FAIL-REQ-02-ITF-04",
+      "function_id": "REQ-02",
       "category": "Intermittent Function",
-      "syntactical_description": "Intermittently generates magnetic force due to coil connection fault",
-      "defect_code": "DC-dfa551f0",
-      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
-      "severity": 7
+      "syntactical_description": "Intermittently actuate trip mechanism",
+      "defect_code": "DC-fc798b29",
+      "end_effect": "Fire or thermal damage",
+      "severity": 9
     },
     {
-      "failure_id": "FAIL-002-USF-04",
-      "function_id": "FUNC-002",
+      "failure_id": "FAIL-REQ-02-PDF-05",
+      "function_id": "REQ-02",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "actuate trip mechanism below threshold",
+      "defect_code": "DC-a13aacaa",
+      "end_effect": "Fire or thermal damage",
+      "severity": 9
+    },
+    {
+      "failure_id": "FAIL-REQ-02-USF-06",
+      "function_id": "REQ-02",
       "category": "Unintended / Spurious Function",
-      "syntactical_description": "Uncommanded coil generates magnetic force without control signal",
-      "defect_code": "DC-54c30a18",
-      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
-      "severity": 10
+      "syntactical_description": "Uncommanded actuate trip mechanism",
+      "defect_code": "DC-41ecf356",
+      "end_effect": "Fire or thermal damage",
+      "severity": 9
     },
     {
-      "failure_id": "FAIL-002-DEF-05",
-      "function_id": "FUNC-002",
+      "failure_id": "FAIL-REQ-02-DEF-07",
+      "function_id": "REQ-02",
       "category": "Delayed / Early Function",
-      "syntactical_description": "Generates magnetic force too late after voltage is applied to coil",
-      "defect_code": "DC-94d62940",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
-      "severity": 4
+      "syntactical_description": "actuate trip mechanism too late",
+      "defect_code": "DC-d3aa25ec",
+      "end_effect": "Fire or thermal damage",
+      "severity": 9
     },
     {
-      "failure_id": "FAIL-002-ISF-06",
-      "function_id": "FUNC-002",
-      "category": "Inability to Stop Function",
-      "syntactical_description": "Fails to cease generate magnetic force when supply is removed",
-      "defect_code": "DC-d342024c",
-      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
-      "severity": 10
-    },
-    {
-      "failure_id": "FAIL-002-ERF-07",
-      "function_id": "FUNC-002",
-      "category": "Erratic Function",
-      "syntactical_description": "Erratically generates magnetic force causing armature chatter",
-      "defect_code": "DC-2f13cd2f",
-      "end_effect": "Nuisance user experience due to non-hazardous heat, vibration, or elevated noise levels.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-003-TLF-01",
-      "function_id": "FUNC-003",
+      "failure_id": "FAIL-REQ-03-TLF-01",
+      "function_id": "REQ-03",
       "category": "Total Loss of Function",
-      "syntactical_description": "Fails to signal contact status to the control circuit",
-      "defect_code": "DC-ac380852",
-      "end_effect": "Total inability to interface, physically or digitally, with required external systems or accessories.",
-      "severity": 7
+      "syntactical_description": "Fails to signal trip status",
+      "defect_code": "DC-a94e030c",
+      "end_effect": "Loss of status monitoring",
+      "severity": 4
     },
     {
-      "failure_id": "FAIL-003-PDF-02",
-      "function_id": "FUNC-003",
+      "failure_id": "FAIL-REQ-03-PDF-02",
+      "function_id": "REQ-03",
       "category": "Partial / Degraded Function",
-      "syntactical_description": "Signals contact status with degraded accuracy or insufficient current capacity",
-      "defect_code": "DC-a8ef950b",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "syntactical_description": "Provides insufficient signal trip status",
+      "defect_code": "DC-30c37a32",
+      "end_effect": "Loss of status monitoring",
       "severity": 4
     },
     {
-      "failure_id": "FAIL-003-ITF-03",
-      "function_id": "FUNC-003",
+      "failure_id": "FAIL-REQ-03-PDF-03",
+      "function_id": "REQ-03",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Provides excessive signal trip status",
+      "defect_code": "DC-b5565f16",
+      "end_effect": "Loss of status monitoring",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-REQ-03-ITF-04",
+      "function_id": "REQ-03",
       "category": "Intermittent Function",
-      "syntactical_description": "Intermittently signals contact status due to auxiliary contact bounce",
-      "defect_code": "DC-b80190bd",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "syntactical_description": "Intermittently signal trip status",
+      "defect_code": "DC-fb9a117c",
+      "end_effect": "Loss of status monitoring",
       "severity": 4
     },
     {
-      "failure_id": "FAIL-003-USF-04",
-      "function_id": "FUNC-003",
+      "failure_id": "FAIL-REQ-03-PDF-05",
+      "function_id": "REQ-03",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "signal trip status below threshold",
+      "defect_code": "DC-501cb022",
+      "end_effect": "Loss of status monitoring",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-REQ-03-USF-06",
+      "function_id": "REQ-03",
       "category": "Unintended / Spurious Function",
-      "syntactical_description": "Uncommanded signaling of contact status without main contact state change",
-      "defect_code": "DC-8a3e8ddb",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "syntactical_description": "Uncommanded signal trip status",
+      "defect_code": "DC-36ec6bad",
+      "end_effect": "Loss of status monitoring",
       "severity": 4
     },
     {
-      "failure_id": "FAIL-003-DEF-05",
-      "function_id": "FUNC-003",
+      "failure_id": "FAIL-REQ-03-DEF-07",
+      "function_id": "REQ-03",
       "category": "Delayed / Early Function",
-      "syntactical_description": "Signals contact status too late relative to actual main contact position",
-      "defect_code": "DC-42ffae9e",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "syntactical_description": "signal trip status too late",
+      "defect_code": "DC-b7117c7f",
+      "end_effect": "Loss of status monitoring",
       "severity": 4
     },
     {
-      "failure_id": "FAIL-003-ISF-06",
-      "function_id": "FUNC-003",
-      "category": "Inability to Stop Function",
-      "syntactical_description": "Fails to cease signaling contact status when main contacts open",
-      "defect_code": "DC-45af1617",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-003-ERF-07",
-      "function_id": "FUNC-003",
-      "category": "Erratic Function",
-      "syntactical_description": "Erratically signals contact status with corrupted position indication",
-      "defect_code": "DC-d52e2ebe",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-004-TLF-01",
-      "function_id": "FUNC-004",
+      "failure_id": "FAIL-REQ-04-TLF-01",
+      "function_id": "REQ-04",
       "category": "Total Loss of Function",
-      "syntactical_description": "Fails to sense overload current through the bimetallic element",
-      "defect_code": "DC-fc4f1173",
-      "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+      "syntactical_description": "Fails to interrupt electrical circuit",
+      "defect_code": "DC-6453dea7",
+      "end_effect": "Upstream protection trip / Arc Flash",
       "severity": 10
     },
     {
-      "failure_id": "FAIL-004-PDF-02",
-      "function_id": "FUNC-004",
+      "failure_id": "FAIL-REQ-04-PDF-02",
+      "function_id": "REQ-04",
       "category": "Partial / Degraded Function",
-      "syntactical_description": "Senses overload current with insufficient sensitivity due to degraded bimetallic calibration",
-      "defect_code": "DC-e789e91c",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-004-ITF-03",
-      "function_id": "FUNC-004",
-      "category": "Intermittent Function",
-      "syntactical_description": "Intermittently senses overload current due to thermal drift",
-      "defect_code": "DC-7e2d2b93",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-004-USF-04",
-      "function_id": "FUNC-004",
-      "category": "Unintended / Spurious Function",
-      "syntactical_description": "Uncommanded sense of overload current triggers nuisance trip at normal load",
-      "defect_code": "DC-d149e0b6",
-      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
-      "severity": 7
-    },
-    {
-      "failure_id": "FAIL-004-DEF-05",
-      "function_id": "FUNC-004",
-      "category": "Delayed / Early Function",
-      "syntactical_description": "Senses overload current too late allowing motor thermal damage",
-      "defect_code": "DC-3804320b",
-      "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+      "syntactical_description": "Provides insufficient interrupt electrical circuit",
+      "defect_code": "DC-b1be394a",
+      "end_effect": "Upstream protection trip / Arc Flash",
       "severity": 10
     },
     {
-      "failure_id": "FAIL-004-ISF-06",
-      "function_id": "FUNC-004",
-      "category": "Inability to Stop Function",
-      "syntactical_description": "Fails to cease sense overload current after trip and reset",
-      "defect_code": "DC-2b226dd3",
-      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
-      "severity": 7
+      "failure_id": "FAIL-REQ-04-PDF-03",
+      "function_id": "REQ-04",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Provides excessive interrupt electrical circuit",
+      "defect_code": "DC-796a5038",
+      "end_effect": "Upstream protection trip / Arc Flash",
+      "severity": 10
     },
     {
-      "failure_id": "FAIL-004-ERF-07",
-      "function_id": "FUNC-004",
-      "category": "Erratic Function",
-      "syntactical_description": "Erratically senses overload current with unstable trip threshold",
-      "defect_code": "DC-7b0268c0",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
+      "failure_id": "FAIL-REQ-04-ITF-04",
+      "function_id": "REQ-04",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently interrupt electrical circuit",
+      "defect_code": "DC-4e449b2b",
+      "end_effect": "Upstream protection trip / Arc Flash",
+      "severity": 10
     },
     {
-      "failure_id": "FAIL-005-TLF-01",
-      "function_id": "FUNC-005",
+      "failure_id": "FAIL-REQ-04-PDF-05",
+      "function_id": "REQ-04",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "interrupt electrical circuit below threshold",
+      "defect_code": "DC-d3100ae2",
+      "end_effect": "Upstream protection trip / Arc Flash",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-REQ-04-USF-06",
+      "function_id": "REQ-04",
+      "category": "Unintended / Spurious Function",
+      "syntactical_description": "Uncommanded interrupt electrical circuit",
+      "defect_code": "DC-d2c49778",
+      "end_effect": "Upstream protection trip / Arc Flash",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-REQ-04-DEF-07",
+      "function_id": "REQ-04",
+      "category": "Delayed / Early Function",
+      "syntactical_description": "interrupt electrical circuit too late",
+      "defect_code": "DC-edcdfb2c",
+      "end_effect": "Upstream protection trip / Arc Flash",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-REQ-05-TLF-01",
+      "function_id": "REQ-05",
       "category": "Total Loss of Function",
-      "syntactical_description": "Fails to disconnect motor circuit during overload condition",
-      "defect_code": "DC-6250b646",
-      "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
+      "syntactical_description": "Fails to provide electrical isolation",
+      "defect_code": "DC-dc87d734",
+      "end_effect": "Risk of electric shock",
       "severity": 10
     },
     {
-      "failure_id": "FAIL-005-PDF-02",
-      "function_id": "FUNC-005",
+      "failure_id": "FAIL-REQ-05-PDF-02",
+      "function_id": "REQ-05",
       "category": "Partial / Degraded Function",
-      "syntactical_description": "Disconnects motor circuit with insufficient speed causing degraded protection",
-      "defect_code": "DC-d0039612",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
-      "severity": 4
+      "syntactical_description": "Provides insufficient provide electrical isolation",
+      "defect_code": "DC-ea65bd3e",
+      "end_effect": "Risk of electric shock",
+      "severity": 10
     },
     {
-      "failure_id": "FAIL-005-ITF-03",
-      "function_id": "FUNC-005",
+      "failure_id": "FAIL-REQ-05-PDF-03",
+      "function_id": "REQ-05",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Provides excessive provide electrical isolation",
+      "defect_code": "DC-28187170",
+      "end_effect": "Risk of electric shock",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-REQ-05-ITF-04",
+      "function_id": "REQ-05",
       "category": "Intermittent Function",
-      "syntactical_description": "Intermittently disconnects motor circuit with unreliable trip actuation",
-      "defect_code": "DC-4b1c72fb",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
+      "syntactical_description": "Intermittently provide electrical isolation",
+      "defect_code": "DC-654ace4b",
+      "end_effect": "Risk of electric shock",
+      "severity": 10
     },
     {
-      "failure_id": "FAIL-005-USF-04",
-      "function_id": "FUNC-005",
+      "failure_id": "FAIL-REQ-05-PDF-05",
+      "function_id": "REQ-05",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "provide electrical isolation below threshold",
+      "defect_code": "DC-46b0ac8f",
+      "end_effect": "Risk of electric shock",
+      "severity": 10
+    },
+    {
+      "failure_id": "FAIL-REQ-05-USF-06",
+      "function_id": "REQ-05",
       "category": "Unintended / Spurious Function",
-      "syntactical_description": "Uncommanded disconnecting of motor circuit without overload present",
-      "defect_code": "DC-4c19901a",
-      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
-      "severity": 7
+      "syntactical_description": "Uncommanded provide electrical isolation",
+      "defect_code": "DC-21dc04ee",
+      "end_effect": "Risk of electric shock",
+      "severity": 10
     },
     {
-      "failure_id": "FAIL-005-DEF-05",
-      "function_id": "FUNC-005",
+      "failure_id": "FAIL-REQ-05-DEF-07",
+      "function_id": "REQ-05",
       "category": "Delayed / Early Function",
-      "syntactical_description": "Disconnects motor circuit too early before actual overload threshold is reached",
-      "defect_code": "DC-08cf9882",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
-      "severity": 4
+      "syntactical_description": "provide electrical isolation too late",
+      "defect_code": "DC-b37c50bd",
+      "end_effect": "Risk of electric shock",
+      "severity": 10
     },
     {
-      "failure_id": "FAIL-005-ISF-06",
-      "function_id": "FUNC-005",
-      "category": "Inability to Stop Function",
-      "syntactical_description": "Fails to cease disconnecting motor circuit preventing manual reset",
-      "defect_code": "DC-350fcf18",
-      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
-      "severity": 7
-    },
-    {
-      "failure_id": "FAIL-005-ERF-07",
-      "function_id": "FUNC-005",
-      "category": "Erratic Function",
-      "syntactical_description": "Erratically disconnects motor circuit with unpredictable trip behavior",
-      "defect_code": "DC-30b1c90c",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-006-TLF-01",
-      "function_id": "FUNC-006",
+      "failure_id": "FAIL-REQ-06-TLF-01",
+      "function_id": "REQ-06",
       "category": "Total Loss of Function",
-      "syntactical_description": "Fails to signal trip status to the monitoring system",
-      "defect_code": "DC-d879ee0b",
-      "end_effect": "Total inability to interface, physically or digitally, with required external systems or accessories.",
-      "severity": 7
+      "syntactical_description": "Fails to signal contact status",
+      "defect_code": "DC-d15a4a3c",
+      "end_effect": "Secondary system mismatch",
+      "severity": 4
     },
     {
-      "failure_id": "FAIL-006-PDF-02",
-      "function_id": "FUNC-006",
+      "failure_id": "FAIL-REQ-06-PDF-02",
+      "function_id": "REQ-06",
       "category": "Partial / Degraded Function",
-      "syntactical_description": "Signals trip status with insufficient reliability due to degraded contact surface",
-      "defect_code": "DC-31acaefe",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "syntactical_description": "Provides insufficient signal contact status",
+      "defect_code": "DC-86dd291e",
+      "end_effect": "Secondary system mismatch",
       "severity": 4
     },
     {
-      "failure_id": "FAIL-006-ITF-03",
-      "function_id": "FUNC-006",
+      "failure_id": "FAIL-REQ-06-PDF-03",
+      "function_id": "REQ-06",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Provides excessive signal contact status",
+      "defect_code": "DC-90b08232",
+      "end_effect": "Secondary system mismatch",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-REQ-06-ITF-04",
+      "function_id": "REQ-06",
       "category": "Intermittent Function",
-      "syntactical_description": "Intermittently signals trip status with unstable auxiliary contact",
-      "defect_code": "DC-58a8f52c",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "syntactical_description": "Intermittently signal contact status",
+      "defect_code": "DC-c48725d0",
+      "end_effect": "Secondary system mismatch",
       "severity": 4
     },
     {
-      "failure_id": "FAIL-006-USF-04",
-      "function_id": "FUNC-006",
+      "failure_id": "FAIL-REQ-06-PDF-05",
+      "function_id": "REQ-06",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "signal contact status below threshold",
+      "defect_code": "DC-bac7141f",
+      "end_effect": "Secondary system mismatch",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-REQ-06-USF-06",
+      "function_id": "REQ-06",
       "category": "Unintended / Spurious Function",
-      "syntactical_description": "Uncommanded signaling of trip status without actual overload trip",
-      "defect_code": "DC-541ab252",
-      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
-      "severity": 7
+      "syntactical_description": "Uncommanded signal contact status",
+      "defect_code": "DC-9607d8fd",
+      "end_effect": "Secondary system mismatch",
+      "severity": 4
     },
     {
-      "failure_id": "FAIL-006-DEF-05",
-      "function_id": "FUNC-006",
+      "failure_id": "FAIL-REQ-06-DEF-07",
+      "function_id": "REQ-06",
       "category": "Delayed / Early Function",
-      "syntactical_description": "Signals trip status too late after mechanical trip has occurred",
-      "defect_code": "DC-a17c4cb2",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "syntactical_description": "signal contact status too late",
+      "defect_code": "DC-b8316ff7",
+      "end_effect": "Secondary system mismatch",
       "severity": 4
     },
     {
-      "failure_id": "FAIL-006-ISF-06",
-      "function_id": "FUNC-006",
-      "category": "Inability to Stop Function",
-      "syntactical_description": "Fails to cease signaling trip status after relay is reset",
-      "defect_code": "DC-3b6077b8",
-      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
-      "severity": 7
-    },
-    {
-      "failure_id": "FAIL-006-ERF-07",
-      "function_id": "FUNC-006",
-      "category": "Erratic Function",
-      "syntactical_description": "Erratically signals trip status with corrupted indication",
-      "defect_code": "DC-fb4e210f",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-007-TLF-01",
-      "function_id": "FUNC-007",
+      "failure_id": "FAIL-REQ-08-TLF-01",
+      "function_id": "REQ-08",
       "category": "Total Loss of Function",
-      "syntactical_description": "Fails to switch motor circuit between ON and OFF positions",
-      "defect_code": "DC-f84535ff",
-      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
+      "syntactical_description": "Fails to maintain mechanical durability",
+      "defect_code": "DC-344e70a3",
+      "end_effect": "Reduced equipment lifespan",
       "severity": 7
     },
     {
-      "failure_id": "FAIL-007-PDF-02",
-      "function_id": "FUNC-007",
+      "failure_id": "FAIL-REQ-08-PDF-02",
+      "function_id": "REQ-08",
       "category": "Partial / Degraded Function",
-      "syntactical_description": "Switches motor circuit with insufficient contact pressure causing degraded performance",
-      "defect_code": "DC-6429afb1",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-007-ITF-03",
-      "function_id": "FUNC-007",
-      "category": "Intermittent Function",
-      "syntactical_description": "Intermittently switches motor circuit due to worn detent mechanism",
-      "defect_code": "DC-fb03ebf0",
-      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
+      "syntactical_description": "Provides insufficient maintain mechanical durability",
+      "defect_code": "DC-43be6d63",
+      "end_effect": "Reduced equipment lifespan",
       "severity": 7
     },
     {
-      "failure_id": "FAIL-007-USF-04",
-      "function_id": "FUNC-007",
+      "failure_id": "FAIL-REQ-08-PDF-03",
+      "function_id": "REQ-08",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "Provides excessive maintain mechanical durability",
+      "defect_code": "DC-9b72443c",
+      "end_effect": "Reduced equipment lifespan",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-REQ-08-ITF-04",
+      "function_id": "REQ-08",
+      "category": "Intermittent Function",
+      "syntactical_description": "Intermittently maintain mechanical durability",
+      "defect_code": "DC-84e51f56",
+      "end_effect": "Reduced equipment lifespan",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-REQ-08-PDF-05",
+      "function_id": "REQ-08",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "maintain mechanical durability below threshold",
+      "defect_code": "DC-922f83bd",
+      "end_effect": "Reduced equipment lifespan",
+      "severity": 7
+    },
+    {
+      "failure_id": "FAIL-REQ-08-USF-06",
+      "function_id": "REQ-08",
       "category": "Unintended / Spurious Function",
-      "syntactical_description": "Uncommanded switching of motor circuit from vibration or shock",
-      "defect_code": "DC-07908bb4",
-      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
-      "severity": 10
+      "syntactical_description": "Uncommanded maintain mechanical durability",
+      "defect_code": "DC-2450da14",
+      "end_effect": "Reduced equipment lifespan",
+      "severity": 7
     },
     {
-      "failure_id": "FAIL-007-DEF-05",
-      "function_id": "FUNC-007",
+      "failure_id": "FAIL-REQ-08-DEF-07",
+      "function_id": "REQ-08",
       "category": "Delayed / Early Function",
-      "syntactical_description": "Switches motor circuit with delayed mechanical response",
-      "defect_code": "DC-c0630900",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
-      "severity": 4
+      "syntactical_description": "maintain mechanical durability too late",
+      "defect_code": "DC-b437db98",
+      "end_effect": "Reduced equipment lifespan",
+      "severity": 7
     },
     {
-      "failure_id": "FAIL-007-ISF-06",
-      "function_id": "FUNC-007",
-      "category": "Inability to Stop Function",
-      "syntactical_description": "Fails to cease switching motor circuit when moved to OFF position",
-      "defect_code": "DC-be445859",
-      "end_effect": "Unintended activation or inability to stop hazardous moving parts.",
-      "severity": 10
-    },
-    {
-      "failure_id": "FAIL-007-ERF-07",
-      "function_id": "FUNC-007",
-      "category": "Erratic Function",
-      "syntactical_description": "Erratically switches motor circuit with unreliable position detent",
-      "defect_code": "DC-b9b4c32d",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-008-TLF-01",
-      "function_id": "FUNC-008",
+      "failure_id": "FAIL-REQ-09-TLF-01",
+      "function_id": "REQ-09",
       "category": "Total Loss of Function",
-      "syntactical_description": "Fails to limit overload current allowing unprotected motor operation",
-      "defect_code": "DC-4aa0d89a",
-      "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
-      "severity": 10
+      "syntactical_description": "Fails to withstand vibrations",
+      "defect_code": "DC-02839d41",
+      "end_effect": "Nuisance system downtime",
+      "severity": 4
     },
     {
-      "failure_id": "FAIL-008-PDF-02",
-      "function_id": "FUNC-008",
+      "failure_id": "FAIL-REQ-09-PDF-02",
+      "function_id": "REQ-09",
       "category": "Partial / Degraded Function",
-      "syntactical_description": "Limits overload current at insufficient accuracy due to degraded thermal calibration",
-      "defect_code": "DC-bb63ef40",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "syntactical_description": "Provides insufficient withstand vibrations",
+      "defect_code": "DC-5db89753",
+      "end_effect": "Nuisance system downtime",
       "severity": 4
     },
     {
-      "failure_id": "FAIL-008-ITF-03",
-      "function_id": "FUNC-008",
-      "category": "Intermittent Function",
-      "syntactical_description": "Intermittently limits overload current with inconsistent trip response",
-      "defect_code": "DC-cb5cc3c1",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-008-USF-04",
-      "function_id": "FUNC-008",
-      "category": "Unintended / Spurious Function",
-      "syntactical_description": "Uncommanded limiting of overload current causes nuisance trip at normal load",
-      "defect_code": "DC-f013547d",
-      "end_effect": "Abrupt and unrecoverable cessation of the primary function during operation.",
-      "severity": 7
-    },
-    {
-      "failure_id": "FAIL-008-DEF-05",
-      "function_id": "FUNC-008",
-      "category": "Delayed / Early Function",
-      "syntactical_description": "Limits overload current too late exceeding the Class 10 tripping curve",
-      "defect_code": "DC-30e3a089",
-      "end_effect": "Exposure of the user or environment to hazardous voltage, toxic materials, or extreme temperatures.",
-      "severity": 10
-    },
-    {
-      "failure_id": "FAIL-008-ISF-06",
-      "function_id": "FUNC-008",
-      "category": "Inability to Stop Function",
-      "syntactical_description": "Fails to cease limiting overload current preventing motor restart after reset",
-      "defect_code": "DC-0558884b",
-      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
-      "severity": 7
-    },
-    {
-      "failure_id": "FAIL-008-ERF-07",
-      "function_id": "FUNC-008",
-      "category": "Erratic Function",
-      "syntactical_description": "Erratically limits overload current with unstable trip threshold",
-      "defect_code": "DC-17d82adb",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
-      "severity": 4
-    },
-    {
-      "failure_id": "FAIL-009-TLF-01",
-      "function_id": "FUNC-009",
-      "category": "Total Loss of Function",
-      "syntactical_description": "Fails to interrupt short-circuit current during fault condition",
-      "defect_code": "DC-d014907e",
-      "end_effect": "Catastrophic physical failure resulting in fire, explosion, or high-energy release.",
-      "severity": 10
-    },
-    {
-      "failure_id": "FAIL-009-PDF-02",
-      "function_id": "FUNC-009",
+      "failure_id": "FAIL-REQ-09-PDF-03",
+      "function_id": "REQ-09",
       "category": "Partial / Degraded Function",
-      "syntactical_description": "Interrupts short-circuit current with insufficient speed causing degraded protection",
-      "defect_code": "DC-8addbd21",
-      "end_effect": "Primary function operates, but at a noticeably degraded speed, range, or capacity.",
+      "syntactical_description": "Provides excessive withstand vibrations",
+      "defect_code": "DC-041742af",
+      "end_effect": "Nuisance system downtime",
       "severity": 4
     },
     {
-      "failure_id": "FAIL-009-ITF-03",
-      "function_id": "FUNC-009",
+      "failure_id": "FAIL-REQ-09-ITF-04",
+      "function_id": "REQ-09",
       "category": "Intermittent Function",
-      "syntactical_description": "Intermittently interrupts short-circuit current with unreliable magnetic trip",
-      "defect_code": "DC-26e074e9",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "syntactical_description": "Intermittently withstand vibrations",
+      "defect_code": "DC-0f5db48a",
+      "end_effect": "Nuisance system downtime",
       "severity": 4
     },
     {
-      "failure_id": "FAIL-009-USF-04",
-      "function_id": "FUNC-009",
+      "failure_id": "FAIL-REQ-09-PDF-05",
+      "function_id": "REQ-09",
+      "category": "Partial / Degraded Function",
+      "syntactical_description": "withstand vibrations below threshold",
+      "defect_code": "DC-f9c0bcf8",
+      "end_effect": "Nuisance system downtime",
+      "severity": 4
+    },
+    {
+      "failure_id": "FAIL-REQ-09-USF-06",
+      "function_id": "REQ-09",
       "category": "Unintended / Spurious Function",
-      "syntactical_description": "Uncommanded interrupting of short-circuit current during normal inrush",
-      "defect_code": "DC-49d47a15",
-      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
-      "severity": 7
+      "syntactical_description": "Uncommanded withstand vibrations",
+      "defect_code": "DC-17332d5a",
+      "end_effect": "Nuisance system downtime",
+      "severity": 4
     },
     {
-      "failure_id": "FAIL-009-DEF-05",
-      "function_id": "FUNC-009",
+      "failure_id": "FAIL-REQ-09-DEF-07",
+      "function_id": "REQ-09",
       "category": "Delayed / Early Function",
-      "syntactical_description": "Interrupts short-circuit current too late allowing equipment damage",
-      "defect_code": "DC-9caa7ada",
-      "end_effect": "Catastrophic physical failure resulting in fire, explosion, or high-energy release.",
-      "severity": 10
-    },
-    {
-      "failure_id": "FAIL-009-ISF-06",
-      "function_id": "FUNC-009",
-      "category": "Inability to Stop Function",
-      "syntactical_description": "Fails to cease interrupting short-circuit current preventing circuit re-energization",
-      "defect_code": "DC-5b265917",
-      "end_effect": "Complete inability to power on, initialize, or accept user inputs.",
-      "severity": 7
-    },
-    {
-      "failure_id": "FAIL-009-ERF-07",
-      "function_id": "FUNC-009",
-      "category": "Erratic Function",
-      "syntactical_description": "Erratically interrupts short-circuit current with unpredictable trip threshold",
-      "defect_code": "DC-3a35a7a4",
-      "end_effect": "Product output is erratic, unstable, or of poor quality compared to specifications.",
+      "syntactical_description": "withstand vibrations too late",
+      "defect_code": "DC-2d7baf8c",
+      "end_effect": "Nuisance system downtime",
       "severity": 4
     }
   ]

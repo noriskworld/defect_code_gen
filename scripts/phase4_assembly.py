@@ -91,7 +91,7 @@ def check_duplicates(failure_modes: list) -> list:
 # 3. ASSEMBLY ENGINE
 # ==========================================
 
-def assemble(hierarchy: list, functions: list, effects_map: dict, metadata: dict) -> dict:
+def assemble(hierarchy: list, functions: list, effects_list: list, metadata: dict) -> dict:
     """
     Assembles the final standardized_defect_codes JSON.
 
@@ -112,22 +112,17 @@ def assemble(hierarchy: list, functions: list, effects_map: dict, metadata: dict
 
     for func in functions:
         function_id = func["function_id"]
-        verb = func["verb"]
-        noun = func["noun"]
+        
+        # Filter effects for this function
+        func_effects = [e for e in effects_list if e["function_id"] == function_id]
 
-        # Iterate through all 7 failure categories for this function
-        for category in CATEGORY_ABBREV.keys():
-            # Build the lookup key for this function-category pair
-            lookup_key = f"{function_id}|{category}"
+        # Track sequence counters per function_id for readable IDs
+        seq_counter.setdefault(function_id, 0)
 
-            # Check if we have a reasoned effect for this combination
-            if lookup_key not in effects_map:
-                continue  # Skip categories that weren't generated for this function
-
-            effect_data = effects_map[lookup_key]
-
+        for effect_data in func_effects:
+            category = effect_data["category"]
+            
             # Generate deterministic IDs
-            seq_counter.setdefault(function_id, 0)
             seq_counter[function_id] += 1
 
             failure_id = generate_failure_id(
@@ -228,20 +223,9 @@ def main():
         print(f"Error loading inputs: {e}")
         sys.exit(1)
 
-    # --- Build effects map (keyed by "function_id|category") ---
-    effects_map = {}
-    if isinstance(effects_raw, list):
-        for entry in effects_raw:
-            key = f"{entry['function_id']}|{entry['category']}"
-            effects_map[key] = entry
-    elif isinstance(effects_raw, dict):
-        effects_map = effects_raw
-
-    # --- Build metadata ---
-    metadata = {"product_family": args.metadata, "version": "1.0"}
-
     # --- Assemble ---
-    assembled = assemble(hierarchy, functions, effects_map, metadata)
+    metadata = {"product_family": args.metadata, "version": "1.0"}
+    assembled = assemble(hierarchy, functions, effects_raw, metadata)
 
     # --- Validate ---
     report = validate_output(assembled, args.schema)

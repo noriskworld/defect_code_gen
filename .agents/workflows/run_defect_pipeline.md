@@ -13,39 +13,36 @@ Run this workflow to process a product manual through all 5 phases and produce a
 
 ---
 
-## Phase 1: Ingestion & Grounding
+## Phase 1: Ingestion & Multi-Source Collection
 
-1. **Primary path (URL):** If a public URL is available, use `mcp_notebooklm_ask_question` to ingest directly.
-2. **Fallback (PDF extraction):**
-   ```bash
-   # // turbo
-   ~/.gemini/antigravity/.venv/bin/python ~/.gemini/antigravity/skills/pdf_extraction/scripts/extract.py \
-     "<absolute_path_to_pdf>" --output /tmp/extracted_product.md
-   ```
-3. Read the extracted Markdown and upload to NotebookLM if using fallback.
-4. **System Architect role:** Query NotebookLM to draft the system hierarchy JSON:
-   - Prompt: *"Extract the complete product hierarchy as JSON with fields: node_id, parent_id, name, level (System/Subsystem/Component), description."*
-5. Save hierarchy to `/tmp/hierarchy.json`.
+1. **Information Collection:** Gather technical data from three primary layers:
+    - **Local PDF:** Ingest via `scripts/extract.py`.
+    - **Web Search:** Search `se.com` for specific technical characteristics (Utilization categories, lifecycle).
+    - **Flipbook Intelligence:** Use the `se-catalog-navigator` skill to extract hierarchy and functions from official flipbooks.
+2. **Synthesize Technical Bundle:** Create a Markdown artifact (e.g., `technical_collection.md`) containing the synthesized raw data from all sources.
+3. **NotebookLM Grounding:** If a public catalog URL is available, prefer adding it as a **"Website/URL"** source so NotebookLM can access the original document directly. Otherwise, use the `browser_subagent` (or MCP if `add_source` is available) to upload the synthesized Technical Bundle as a "Copied text" source.
+4. **Hierarchy Extraction:** Query NotebookLM to draft the product hierarchy:
+   - Prompt: *"Extract the complete product hierarchy with node_id, parent_id, name, level, and description."*
+5. Save hierarchy to `/tmp/hierarchy.json` and [fmea_input_ready.md](file:///Users/yunweihu/Documents/code/defect_code_gen/docs/research/fmea_input_ready.md).
 
 ### 🚦 Gate 1 (HITL)
 **Stop and present the hierarchy to the user for visual approval.** Do not proceed until confirmed.
 
 ---
-## Phase 2: Functional Analysis (INCOSE)
+## Phase 2: High-Fidelity Functional Analysis (INCOSE)
 
-6. **Initial Extraction**: For the product query NotebookLM:
-   - Prompt: *"Extract the primary functional requirements for [product] from the documentation. Provide the raw text as found."*
-7. **Function Analyst role (INCOSE Refinement)**:
-   - Analyze each requirement against **INCOSE Guidelines**:
-     - **Singularity**: Does it express only ONE capability? (Avoid "and/or").
-     - **Verifiability**: Is it measurable/testable? (Remove "as far as possible", "high quality").
-     - **Unambiguity**: Is it clear and interpretation-free? (Replace "immediately" with "within X ms").
-   - **Rewrite**: Create a high-quality version of each failing requirement.
-   - **Format**: Present a table with columns: `Req. ID`, `Original Requirement`, `Revised Requirement`, `Analysis Notes`.
-8. Save refined functions to `/tmp/functions.json`.
+6. **Functional Elicitation**: Query NotebookLM using the grounded source:
+   - Prompt: *"Review the technical collection and: 1. Identify primary functions. 2. Prepare 5 reliability elicitation questions to clarify system behavior."*
+7. **INCOSE Refinement**:
+   - Rewrite each function into the pattern: **[Condition][Subject][Action][Object][Constraint]**.
+   - Ensure singular, verifiable, and unambiguous language (e.g., replace "effective" with specific timing/current limits).
+8. **Output Generation**: Produce the `fmea_input_ready.md` with:
+   - **Requirements Table**: Columns for `ID`, `Original Function`, `Short Desc`, and `Functional Requirement (INCOSE)`.
+   - **Traceability Matrix**: Subsystem vs. Function mapping (Primary/Secondary).
+9. Save refined functions to `/tmp/functions.json` and the final FMEA input report.
 
 ### 🚦 Gate 2 (HITL)
-**Present the Functional Requirements Table to the user for approval.**
+**Present the refined Requirements Table and Traceability Matrix to the user for approval.**
 
 ---
 
